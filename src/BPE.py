@@ -15,5 +15,4 @@ if __name__ == "__main__":
 
   dataset = load_dataset("imdb")
   create_tokenizer(dataset["train"]["text"], SAVE_PATH="../src/tokenizer.json")
-  print("Tokenizer trained and saved to tokenizer.json")
 # __name__
