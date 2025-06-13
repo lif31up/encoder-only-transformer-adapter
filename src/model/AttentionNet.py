@@ -3,14 +3,14 @@ from torch import nn
 import torch.nn.functional as F
 
 class AttentionNet(nn.Module):
-  def __init__(self, num_heads: int, dim: int, bias: bool):
+  def __init__(self, num_heads: int, dim: int, bias: bool, oupt_dim: int):
     super(AttentionNet, self).__init__()
     self.num_heads, self.dim, self.bias = num_heads, dim, bias
 
     self.at1 = MultiHeadAttention(dim=self.dim, num_heads=8, bias=self.bias)
     self.fc1 = nn.Linear(self.dim, self.dim, bias=self.bias)
     self.at2 = MultiHeadAttention(dim=self.dim, num_heads=8, bias=self.bias)
-    self.fc2 = nn.Linear(self.dim, self.dim, bias=self.bias)
+    self.fc2 = nn.Linear(self.dim, oupt_dim, bias=self.bias)
     self.swish, self.softmax = nn.SiLU(), nn.Softmax(dim=-1)
   # __init__()
 
