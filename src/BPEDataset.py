@@ -3,12 +3,14 @@ from tokenizers import Tokenizer, models, trainers
 from transformers import AutoModel
 from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
+from config import CONFIG
+
 
 class BPEDataset(Dataset):
-  def __init__(self, dataset, encode):
+  def __init__(self, dataset, encode, dim):
     self.dataset, self.encode = dataset, encode
     self.num_classes = list(set(dataset["label"]))
-    self.dim = self.__getitem__(0)[0].shape[1]
+    self.dim = dim
   # __init__()
 
   def __len__(self): return len(self.dataset)
@@ -39,25 +41,18 @@ def load_tokenizer(PATH: str, PRETRAINED_MODEL: str):
 def embed(text: str, tokenizer: Tokenizer, pretrained_model: AutoModel):
   input_ids = torch.tensor([tokenizer.encode(text, add_special_tokens=True).ids])
   with torch.no_grad(): outputs = pretrained_model(input_ids)
-  return torch.mean(outputs.last_hidden_state, dim=1, dtype=torch.float32)
+  return torch.mean(outputs.last_hidden_state, dim=-1, dtype=torch.float32).squeeze(0)
 # embed(): Encodes a given text using the tokenizer and computes the mean of the last hidden state from the model's output.
 
 if __name__ == "__main__":
-  save_path, tag = "tokenizer.json", "dataset"
-  if tag == "load_dataset":
-    from datasets import load_dataset
-    dataset = load_dataset("imdb")
-    create_tokenizer(dataset["train"]["text"], PATH=save_path)
-    print(f"Tokenizer created and saved to {save_path}.")
-  if tag == "load_tokenizer":
-    tokenizer, model = load_tokenizer(save_path, "bert-base-uncased")
-    print(embed("your text here", tokenizer, model))
-  if tag == "dataset":
-    from datasets import load_dataset
-    dataset = load_dataset("imdb")["train"]
-    tokenizer, pretrained_model = load_tokenizer("tokenizer.json", PRETRAINED_MODEL="bert-base-uncased")
-    trainset = BPEDataset(dataset=dataset, encode=(tokenizer, pretrained_model))
-    for feature, label in DataLoader(trainset, batch_size=4, shuffle=True, pin_memory=True, num_workers=4):
-      print(feature.shape, label.shape)
-      break
+  from datasets import load_dataset
+  dim = CONFIG["num_heads"] * 8
+
+  dataset = load_dataset("imdb")["train"]
+  tokenizer, pretrained_model = load_tokenizer("tokenizer.json", PRETRAINED_MODEL="bert-base-uncased")
+  tokenizer.enable_truncation(max_length=dim)
+  tokenizer.enable_padding(pad_id=tokenizer.token_to_id("[PAD]"), pad_token="[PAD]", length=dim)
+  trainset = BPEDataset(dataset=dataset, encode=(tokenizer, pretrained_model), dim=dim)
+
+  for feature, label in trainset: print("Feature shape:", feature.shape, "Label shape:", label.shape)
 # __name__
