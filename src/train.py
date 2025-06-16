@@ -4,7 +4,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from config import CONFIG
 from src.BPEDataset import BPEDataset, load_tokenizer
-from src.model.AttentionNet import AttentionNet, init_weights
+from src.model.Transformer import Transformer, init_weights
 
 def train(TOKENIZER_PATH: str):
   # Initialize device and model parameters
@@ -18,7 +18,7 @@ def train(TOKENIZER_PATH: str):
   trainset = BPEDataset(dataset=dataset, encode=(tokenizer, pretrained_model), dim=dim)
 
   # Initialize model, criterion, and optimizer
-  model = AttentionNet(num_heads=num_heads, dim=trainset.dim, bias=bias, oupt_dim=len(trainset.num_classes)).to(device)
+  model = Transformer(num_heads=num_heads, dim=trainset.dim, bias=bias, oupt_dim=len(trainset.num_classes)).to(device)
   model.apply(init_weights)
   criterion, optim = nn.CrossEntropyLoss(), torch.optim.Adam(model.parameters(), lr=0.0001)
 
