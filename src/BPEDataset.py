@@ -1,10 +1,9 @@
 import torch
 from tokenizers import Tokenizer, models, trainers
 from transformers import AutoModel
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 import torch.nn.functional as F
 from config import CONFIG
-
 
 class BPEDataset(Dataset):
   def __init__(self, dataset, encode, dim):
