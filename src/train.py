@@ -4,7 +4,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from config import CONFIG
 from src.BPEDataset import BPEDataset, load_tokenizer
-from src.model.Transformer import Transformer, init_weights
+from src.model.Transformer import Transformer
 
 def train(TOKENIZER_PATH: str):
   # Initialize device and model parameters
@@ -34,5 +34,12 @@ def train(TOKENIZER_PATH: str):
       optim.step()
       progress_bar.set_postfix({"loss": loss.item()})
 # train()
+
+def init_weights(m):
+  if isinstance(m, nn.Linear):
+    nn.init.xavier_uniform_(m.weight)
+    if m.bias is not None:
+      nn.init.zeros_(m.bias)
+# init_weights()
 
 if __name__ == "__main__": train(TOKENIZER_PATH="tokenizer.json")
