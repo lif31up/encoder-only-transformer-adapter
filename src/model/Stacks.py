@@ -44,12 +44,15 @@ class DecoderStack(nn.Module):
     self.dim, self.n_hidn, self.num_heads, self.bias = dim, n_hidn, num_heads, bias
     self.at1 = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias)
     self.at2 = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, mode="cross")
-    self.ffn, self.swish, self.ln = nn.Linear(self.dim, self.n_hidn), nn.SiLU(), nn.LayerNorm(self.dim)
+    self.ffn = nn.ModuleList([nn.Linear(self.dim, self.dim, bias=self.bias) for _ in range(self.n_hidn)])
+    for _ in range(self.n_hidn): self.ffn.append(nn.Linear(self.dim, self.dim, bias=self.bias))
+    self.swish, self.ln = nn.SiLU(), nn.LayerNorm(self.dim)
   # __init__()
 
   def forward(self, input, output):
     input = self.at1(input)
     input = self.at2(input, output)
+    for fc in self.ffn: input = self.swish(fc(input))
     return self.ln(self.swish(self.ffn(input)) + input)
   # forward()
 # decoder_stack
