@@ -10,9 +10,20 @@ The main goal of this implementation is to provide a clear and concise understan
 
 > You can access the test result on colab [here](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing).
 
+### Implementation Overview
+This implementation includes the following architectures:
+* **BERT-like model** which uses only the encoder part of the transformer architecture.
+* **GPT-like model** which uses only the decoder part of the transformer architecture.
+
 ### More Explanation
-Attention mechanisms allow models to focus on different parts of the input sequence when making predictions. The multi-head attention mechanism extends this idea by using multiple sets of query, key, and value matrices, allowing the model to capture different types of relationships in the data.
-- **Query (Q):** Represents the current word or token we are focusing on.
-- **Key (K):** Represents the words or tokens in the input sequence that we are comparing against.
-- **Value (V):** Represents the actual information we want to retrieve based on the attention scores.
-- **Attention Scores:** Calculated by taking the dot product of the query and key matrices, followed by a softmax operation to normalize the scores.
+`src` and `src/model` directories contain the implementation of the transformer, including the following files:
+- `BPEDataset.py`: This file contains the implementation of the BPE (Byte Pair Encoding) dataset class, which is used to preprocess the IMDB dataset.
+- `BERT.py`: This file contains the implementation of the BERT-like model, which uses the encoder part of the transformer architecture.
+- `GPT.py`: This file contains the implementation of the GPT-like model, which uses the decoder part of the transformer architecture.
+- `Stacks.py`: This file contains the implementation of the stack class, which is used to stack the encoder and decoder layers.
+
+### Instructions
+You can run the code by `if __name__ == "__main__":` block in the `train.py` file. The main components of the code are as follows:
+* `train.py`: This script is used to train the model on the IMDB dataset. It includes the training loop, evaluation, and saving the model checkpoints.
+* `tokenizer.py`: This file contains the implementation of the tokenizer class, which is used to tokenize the input text.
+* `config.py`: This file contains the configuration settings for the model, including hyperparameters such as learning rate, batch size, number of head and number of epochs.
