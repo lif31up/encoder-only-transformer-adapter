@@ -1,5 +1,5 @@
 from torch import nn
-from src.model.Stacks import EncoderStack, DecoderStack
+from src.model.Stacks import EncoderStack, DecoderStack, init_weights
 
 
 class Transformer(nn.Module):
@@ -13,7 +13,7 @@ class Transformer(nn.Module):
     self.decoder = nn.ModuleList([DecoderStack(dim=self.dim, n_hidn=self.n_hidn, num_heads=self.num_heads, bias=self.bias) for _ in range(self.n_stack)])
 
     # embedding, fully connected, and positional encoding layers
-    self.fc = nn.Linear(self.dim, self.oupt_dim, bias=self.bias)
+    self.fc = nn.Linear(self.dim, self.oupt_dim, bias=self.bias).apply(init_weights)
     self.softmax = nn.Softmax(dim=-1)
   # __init__()
 

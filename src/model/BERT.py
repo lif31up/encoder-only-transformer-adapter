@@ -1,5 +1,7 @@
-from src.model.Stacks import EncoderStack
 from torch import nn
+
+from src.model.Stacks import EncoderStack
+
 
 class BERT(nn.Module):
   def __init__(self, num_heads: int, dim: int, oupt_dim: int, n_hidn: int, bias: bool = False, n_stack: int = 3):
