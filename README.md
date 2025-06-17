@@ -10,9 +10,9 @@ This implementation includes the following architectures:
 * **BERT-like model** which uses only the encoder part of the transformer architecture.
 * **GPT-like model** which uses only the decoder part of the transformer architecture.
 
-> You can find the full documentation [here](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-mechanism-the-core-of-modern-ai).
+> Full explanation in [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-mechanism-the-core-of-modern-ai)
 
-> You can access the test result on colab [here](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing).
+> Quickstart in [Colab](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing)
 
 ### Instructions
 `train.py`: This script is used to train the model on the IMDB dataset. It includes the training loop, evaluation, and saving the model checkpoints.
