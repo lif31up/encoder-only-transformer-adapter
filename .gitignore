@@ -1,7 +1,7 @@
 # user-defined
 data/
 *.pth
-
+*.json
 # pycharm
 .idea
 
