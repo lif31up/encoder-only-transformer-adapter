@@ -56,8 +56,8 @@ if __name__ == "__main__":
 
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-  vurt = BERT(num_heads=CONFIG["num_heads"], dim=CONFIG["dim"], oupt_dim=len(set(dataset["label"])), n_hidn=2, bias=False, n_stack=3).to(device)
-  pity = GPT(num_heads=CONFIG["num_heads"], dim=CONFIG["dim"], oupt_dim=len(set(dataset["label"])), n_hidn=2, bias=False, n_stack=3).to(device)
+  vurt = BERT(num_heads=CONFIG["num_heads"], dim=CONFIG["dim"], oupt_dim=len(set(dataset["label"])), n_hidn=2, bias=False, n_stack=3, init_weights=init_weights).to(device)
+  pity = GPT(num_heads=CONFIG["num_heads"], dim=CONFIG["dim"], oupt_dim=len(set(dataset["label"])), n_hidn=2, bias=False, n_stack=3, init_weights=init_weights).to(device)
 
   train(vurt, dataset, tokenizer, SAVE_TO="bert_model", clip_grad=True)
   train(pity, dataset, tokenizer, SAVE_TO="gpt_model", clip_grad=True)
