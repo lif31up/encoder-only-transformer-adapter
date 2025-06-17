@@ -42,16 +42,3 @@ def embed(text: str, tokenizer: Tokenizer, pretrained_model: AutoModel):
   with torch.no_grad(): outputs = pretrained_model(input_ids)
   return torch.mean(outputs.last_hidden_state, dim=-1, dtype=torch.float32).squeeze(0)
 # embed(): Encodes a given text using the tokenizer and computes the mean of the last hidden state from the model's output.
-
-if __name__ == "__main__":
-  from datasets import load_dataset
-  dim = CONFIG["num_heads"] * 8
-
-  dataset = load_dataset("imdb")["train"]
-  tokenizer, pretrained_model = load_tokenizer("tokenizer.json", PRETRAINED_MODEL="bert-base-uncased")
-  tokenizer.enable_truncation(max_length=dim)
-  tokenizer.enable_padding(pad_id=tokenizer.token_to_id("[PAD]"), pad_token="[PAD]", length=dim)
-  trainset = BPEDataset(dataset=dataset, encode=(tokenizer, pretrained_model), dim=dim)
-
-  for feature, label in trainset: print("Feature shape:", feature.shape, "Label shape:", label.shape)
-# __name__
