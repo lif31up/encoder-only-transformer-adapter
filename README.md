@@ -12,7 +12,7 @@ This implementation includes the following architectures:
 
 > Check out the full explanation in [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-mechanism-the-core-of-modern-ai)
 
-> You can quickstart in [Colab](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing)
+> You can quickstart on [Colab](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing)
 
 ### Instructions
 `train.py`: This script is used to train the model on the IMDB dataset. It includes the training loop, evaluation, and saving the model checkpoints.
