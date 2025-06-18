@@ -10,7 +10,7 @@ This implementation includes the following architectures:
 * **BERT-like model** which uses only the encoder part of the transformer architecture.
 * **GPT-like model** which uses only the decoder part of the transformer architecture.
 
-> Check out full explanation in [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-mechanism-the-core-of-modern-ai)
+> Check out the full explanation in [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-mechanism-the-core-of-modern-ai)
 
 > You can quickstart in [Colab](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing)
 
