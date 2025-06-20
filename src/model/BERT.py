@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
   for feature, label in DataLoader(trainset, batch_size=32, shuffle=True, pin_memory=True, num_workers=4):
     output = vurt(feature)
-    pred = torch.argmax(output, dim=-1)
     print(f"Feature shape: {feature.shape}, Label shape: {label.shape}")
+    print(f"Output shape: {output.shape}")
     break  # Just to check the first batch
 # if __name__ == "__main__":

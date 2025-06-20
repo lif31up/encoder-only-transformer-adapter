@@ -22,7 +22,7 @@ class BPEDataset(Dataset):
 def embed(text: str, tokenizer, model):
   input = tokenizer(text, return_tensors="pt", padding="max_length", truncation=True, max_length=512)
   with torch.no_grad(): output = model(**input)
-  return output.last_hidden_state.squeeze(0)
+  return output.last_hidden_state.squeeze(0).mean(dim=0)
 # embed(): Encodes a given text using the tokenizer and computes the mean of the last hidden state from the model's output.
 
 def positional_encode(input):
