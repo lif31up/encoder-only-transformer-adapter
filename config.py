@@ -1,9 +1,23 @@
 # CONFIGURATION
 CONFIG = {
-  "num_heads": 2,
-  "dim": 2 * 32,  # num_heads * 8
+  "version": "1.0",
+  "model": {
+    "type": "BERT",
+    "num_heads": 12,
+    "dim": 768,  # = num_heads * 8
+    "n_hidn": 2,
+    "bias": False,
+    "n_stack": 3,
+    "oupt_dim": 2,  # Number of classes for classification
+  },  # model_config
+  "tokenizer_config": {
+    "vocab_size": 30522,
+    "special_tokens": ["[UNK]", "[PAD]", "[CLS]"],
+    "pad_token": "[PAD]",
+    "pretrained_model": "bert-base-uncased",
+  }, # tokenizer_config
   "iterations": 10,
   "batch_size": 32,
   "learning_rate": 0.0001,
-  "pretrained_model": "bert-base-uncased",
+  "clip_grad": True,
 } # CONFIG
