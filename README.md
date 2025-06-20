@@ -50,20 +50,10 @@ if __name__ == "__main__":
 # __name__
 ## output example: accuracy: 0.91
 ```
----
-### More Explanation
-This implement consists of two main methods:
-* **transfer learning:** using a pretrained model (like BERT) and fine-tuning it on the IMDB dataset. This can be accessed by `train.py`.
-* **without pretrained model:** training a model from scratch on the IMDB dataset. This can be accessed by `train_without_pt.py`.
 
----
 ### Result
 There are two types of results: first is the accuracy of the transferred model while second is the accuracy of the model trained from scratch.
 
 |          | BERT(transferred)   | GPT(transferred)    |
 |----------|---------------------|---------------------|
 | **imdb** | `100%` **(100/100)** | `100%` **(100/100)** |
-
-|          | BERT(from scratch) | GPT(from scratch) |
-|----------|--------------------|-------------------|
-| **imdb** | (ongoing)          | (ongoing)         |
