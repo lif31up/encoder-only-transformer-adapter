@@ -3,12 +3,11 @@ from torch import nn
 import torch.nn.functional as F
 
 class EncoderStack(nn.Module):
-  def __init__(self, dim, n_hidn, num_heads, bias=False, init_weights=None):
+  def __init__(self, dim, n_hidn, num_heads, bias, init_weights=None):
     super(EncoderStack, self).__init__()
     self.dim, self.n_hidn, self.num_heads, self.bias = dim, n_hidn, num_heads, bias
     self.at = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, init_weights=init_weights)
-    self.ffn = nn.ModuleList()
-    for _ in range(self.n_hidn): self.ffn.append(nn.Linear(self.dim, self.dim, bias=self.bias))
+    self.ffn = nn.ModuleList([nn.Linear(self.dim, self.dim, bias=self.bias) for _ in range(self.n_hidn)])
     self.swish, self.ln = nn.SiLU(), nn.LayerNorm(self.dim)
 
     if init_weights: self.ffn.apply(init_weights)
@@ -23,13 +22,12 @@ class EncoderStack(nn.Module):
 # EncoderStack
 
 class DecoderStack(nn.Module):
-  def __init__(self, dim, n_hidn, num_heads, bias=False, init_weights=None):
+  def __init__(self, dim, n_hidn, num_heads, bias, init_weights=None):
     super(DecoderStack, self).__init__()
     self.dim, self.n_hidn, self.num_heads, self.bias = dim, n_hidn, num_heads, bias
     self.at1 = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, init_weights=init_weights)
     self.at2 = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, mode="cross", init_weights=init_weights)
-    self.ffn = nn.ModuleList()
-    for _ in range(self.n_hidn): self.ffn.append(nn.Linear(self.dim, self.dim, bias=self.bias))
+    self.ffn = nn.ModuleList([nn.Linear(self.dim, self.dim, bias=self.bias) for _ in range(self.n_hidn)])
     self.swish, self.ln = nn.SiLU(), nn.LayerNorm(self.dim)
 
     if init_weights: self.ffn.apply(init_weights)
