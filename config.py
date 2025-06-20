@@ -17,7 +17,7 @@ CONFIG = {
     "pretrained_model": "bert-base-uncased",
   }, # tokenizer_config
   "iterations": 10,
-  "batch_size": 32,
+  "batch_size": 4,
   "learning_rate": 0.0001,
   "clip_grad": True,
 } # CONFIG

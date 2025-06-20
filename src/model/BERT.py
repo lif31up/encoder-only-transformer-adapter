@@ -15,7 +15,7 @@ class BERT(nn.Module):
 
   def forward(self, input):
     for stack in self.stacks: input = stack(input)
-    return self.fc(input)
+    return self.fc(input.mean(dim=1))
   # forward()
 # BERT
 
