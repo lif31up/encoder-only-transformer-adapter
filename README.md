@@ -15,29 +15,37 @@ This implementation includes the following architectures:
 > You can quickstart on [Colab](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing)
 
 ### Instructions
-`train.py`: This script is used to train the model on the IMDB dataset. It includes the training loop, evaluation, and saving the model checkpoints.
-```python
-if __name__ == "__main__":
-  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(100))
-  create_tokenizer(dataset["text"], "tokenizer.json")
-  tokenizer, pretrained_model = load_tokenizer("tokenizer.json", PRETRAINED_MODEL=CONFIG["pretrained_model"])
-  
-  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-  
-  vurt = BERT(num_heads=CONFIG["num_heads"], dim=CONFIG["dim"], oupt_dim=len(set(dataset["label"])), n_hidn=2, bias=False, n_stack=3).to(device)
-  pity = GPT(num_heads=CONFIG["num_heads"], dim=CONFIG["dim"], oupt_dim=len(set(dataset["label"])), n_hidn=2, bias=False, n_stack=3).to(device)
-  
-  train(vurt, dataset, tokenizer, SAVE_TO="bert_model", clip_grad=True)
-  train(pity, dataset, tokenizer, SAVE_TO="gpt_model", clip_grad=True)
-```
 `confing.py`: This file contains the configuration settings for the model, including the number of heads, dimensions, learning rate, and other hyperparameters.
 ```python
 CONFIG = {
-  "num_heads": 2,
-  "dim": 2 * 32,  # num_heads * 8
+  "version": "1.0",
+  "model": {
+    ...
+  },  # model_config
+  "tokenizer_config": {
+    ...
+  }, # tokenizer_config
   "iterations": 10,
-  "batch_size": 32,
-  "learning_rate": 0.0001,
-  "pretrained_model": "bert-base-uncased",
+  ...,
+  "clip_grad": True,
 } # CONFIG
+```
+`train.py`: This script is used to train the model on the IMDB dataset. It includes the training loop, evaluation, and saving the model checkpoints.
+```python
+if __name__ == "__main__":
+  from datasets import load_dataset
+
+  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(100))
+  train(dataset, config=CONFIG, SAVE_TO="BERT")  # Replace with the actual model path
+# __name__
+```
+`eval.py`: This script is used to evaluate the trained model on the IMDB dataset. It loads the model and tokenizer, processes the dataset, and computes the accuracy of the model.
+```python
+if __name__ == "__main__":
+  from datasets import load_dataset
+
+  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(100))
+  evaluate("BERT.pth", dataset)  # Replace with the actual model path
+# __name__
+## output example: accuracy: 0.91
 ```

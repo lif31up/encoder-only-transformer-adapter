@@ -2,7 +2,6 @@ import torch
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import BertTokenizer, BertModel
-
 from src.BPEDataset import BPEDataset
 from src.model.BERT import BERT
 
@@ -29,10 +28,11 @@ def evaluate(MODEL, dataset):
     feature, label = feature.to(device, non_blocking=True), label.to(device, non_blocking=True)
     output = model.forward(input=feature)
     output = torch.softmax(output, dim=-1)
-    print(f"Output shape: {output.shape}, Label shape: {label.shape}")
+    if torch.argmax(output, dim=-1) == torch.argmax(label, dim=-1):
+      correct += 1
   # for
   print(f"Accuracy: {correct / len(trainset):.4f}")
-# train
+# eval
 
 if __name__ == "__main__":
   from datasets import load_dataset
