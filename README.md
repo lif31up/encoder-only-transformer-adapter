@@ -1,7 +1,7 @@
 This implementation of the Multi-head Attention mechanism is based on the paper **"Attention is All You Need" by Vaswani et al. (2017)**.
 - **task:** classifying movie reviews as positive or negative.
 - **dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
-- **pretrained model:** `bert-base-uncased`, my implementation serves as late layer of pretrained model, which is used to fine-tune the model on the IMDB dataset.
+- **pretrained model:** `bert-base-uncased`, my implementation serves as late layers of pretrained model, which are used to fine-tune the model on the IMDB dataset.
 
 # Attention-is-All-You-Need
 Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
@@ -51,8 +51,19 @@ if __name__ == "__main__":
 ## output example: accuracy: 0.91
 ```
 ---
-### Result
+### More Explanation
+This implement consists of two main methods:
+* **transfer learning:** using a pretrained model (like BERT) and fine-tuning it on the IMDB dataset. This can be accessed by `train.py`.
+* **without pretrained model:** training a model from scratch on the IMDB dataset. This can be accessed by `train_without_pt.py`.
 
-|      | BERT                 | GPT                  | Transformer |
-|------|----------------------|----------------------|------------|
-| **imdb** | `100%` **(100/100)** | `100%` **(100/100)** | (ongoing)  |
+---
+### Result
+There are two types of results: first is the accuracy of the transferred model while second is the accuracy of the model trained from scratch.
+
+|          | BERT(transferred)   | GPT(transferred)    |
+|----------|---------------------|---------------------|
+| **imdb** | `100%` **(100/100)** | `100%` **(100/100)** |
+
+|          | BERT(from scratch) | GPT(from scratch) |
+|----------|--------------------|-------------------|
+| **imdb** | (ongoing)          | (ongoing)         |

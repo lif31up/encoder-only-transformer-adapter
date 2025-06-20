@@ -3,12 +3,10 @@ from safetensors.torch import save_file
 from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from transformers import BertTokenizer, BertModel
-from src.config import CONFIG
-from src.BPEDataset import BPEDataset
-from src.model.BERT import BERT
-from src.model.GPT import GPT
-
+from transformers import BertTokenizer
+from src_npt.config import CONFIG
+from src_npt.BPEDataset import BPEDataset
+from src_npt.model.BERT import BERT
 
 def train(dataset, config=CONFIG, SAVE_TO="model"):
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -18,8 +16,8 @@ def train(dataset, config=CONFIG, SAVE_TO="model"):
   bert_tokenizer.truncation_side = "right"
   bert_tokenizer.padding_side = "right"
   bert_tokenizer.pad_token = bert_tokenizer.eos_token = "[PAD]"
-  bert_model = BertModel.from_pretrained('bert-base-uncased', output_hidden_states=True)
-  trainset = BPEDataset(dataset=dataset, dim=model_config["dim"], tokenizer=bert_tokenizer, model=bert_model)
+
+  trainset = BPEDataset(dataset=dataset, dim=model_config["dim"], tokenizer=bert_tokenizer)
 
   def init_weights(m):
     if isinstance(m, nn.Linear):
@@ -27,10 +25,8 @@ def train(dataset, config=CONFIG, SAVE_TO="model"):
       if m.bias is not None: nn.init.zeros_(m.bias)
   # init_weights()
 
-  if model_config["type"] == "BERT":
-    model = BERT(model_config, init_weights=init_weights).to(device)
-  else:
-    model = GPT(model_config, init_weights=init_weights).to(device)
+  if model_config["type"] == "BERT": model = BERT(model_config, init_weights=init_weights).to(device)
+  # else: model = GPT(model_config, init_weights=init_weights).to(device)
 
   # Initialize model, criterion, and optimizer
   criterion, optim = nn.CrossEntropyLoss(), torch.optim.Adam(model.parameters(), lr=config["learning_rate"], betas=(0.9, 0.98))

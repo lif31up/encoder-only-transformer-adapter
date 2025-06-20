@@ -20,10 +20,9 @@ class GPT(nn.Module):
 # BERT
 
 if __name__ == "__main__":
-  import torch
   from datasets import load_dataset
   from torch.utils.data import DataLoader
-  from config import CONFIG
+  from src.config import CONFIG
   from src.BPEDataset import BPEDataset
 
   tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]

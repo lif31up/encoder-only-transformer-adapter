@@ -15,15 +15,15 @@ class BERT(nn.Module):
 
   def forward(self, input):
     for stack in self.stacks: input = stack(input)
-    return self.fc(input.mean(dim=1))
+    return self.fc(input)
   # forward()
 # BERT
 
 if __name__ == "__main__":
   from datasets import load_dataset
   from torch.utils.data import DataLoader
-  from src.config import CONFIG
-  from src.BPEDataset import BPEDataset
+  from src_npt.config import CONFIG
+  from src_npt.BPEDataset import BPEDataset
 
   tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]
   dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(100))
