@@ -1,6 +1,7 @@
 This implementation of the Multi-head Attention mechanism is based on the paper **"Attention is All You Need" by Vaswani et al. (2017)**.
 - **task:** classifying movie reviews as positive or negative.
 - **dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
+- **pretrained model:** `bert-base-uncased`, my implementation serves as late layer of pretrained model, which is used to fine-tune the model on the IMDB dataset.
 
 # Attention-is-All-You-Need
 Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
