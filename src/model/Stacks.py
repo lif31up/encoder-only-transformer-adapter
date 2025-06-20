@@ -15,10 +15,12 @@ class EncoderStack(nn.Module):
   # __init__()
 
   def forward(self, input):
-    input = self.at(input)
     residual = input
-    for fc in self.ffn: input = self.swish(fc(self.dropout(input)))
-    return self.ln(self.swish(input) + residual)
+    input = self.ln(self.at(input) + residual)
+    for i, fc in enumerate(self.ffn):
+      residual = input
+      input = self.ln(self.swish(fc(self.dropout(input))) + residual)
+    return self.ln(input + residual)
   # forward()
 # EncoderStack
 
@@ -36,11 +38,15 @@ class DecoderStack(nn.Module):
   # __init__()
 
   def forward(self, input, output):
+    residual = input
     input = self.at1(input)
+    input = self.ln(input + residual)
+    residual = input
     input = self.at2(input, output)
+    input = self.ln(input + residual)
     residual = input
     for fc in self.ffn: input = self.swish(fc(self.dropout(input)))
-    return self.ln(self.swish(input) + residual)
+    return self.ln(input + residual)
   # forward()
 # decoder_stack
 
