@@ -12,7 +12,7 @@ This implementation includes the following architectures:
 
 > Check out the full explanation in [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-is-all-you-need)
 
-> You can quickstart on [Colab](https://colab.research.google.com/drive/1IfCdclHqH4L0O1UlJrOViVncYQCNmaj1?usp=sharing)
+> You can quickstart on [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 
 ### Instructions
 `confing.py`: This file contains the configuration settings for the model, including the number of heads, dimensions, learning rate, and other hyperparameters.
