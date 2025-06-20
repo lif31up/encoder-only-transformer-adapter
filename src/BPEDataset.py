@@ -25,31 +25,28 @@ def embed(text: str, tokenizer, model):
   return output.last_hidden_state.squeeze(0)
 # embed(): Encodes a given text using the tokenizer and computes the mean of the last hidden state from the model's output.
 
-def positional_encode(input):
-  for i, input in enumerate(input):
-    if i % 2 == 0: # even number
-      input[i] = torch.sin(input[i] / (10000 ** (2 * input.shape[0] / input.shape[-1])))
-    else:
-      input[i] = torch.cos(input[i] / (10000 ** (2 * input.shape[0] / input.shape[-1])))
-  return input
-# positional encode
-
 if __name__ == "__main__":
   from datasets import load_dataset
   from torch.utils.data import DataLoader
-  from config import CONFIG
+  from src.config import CONFIG
 
+  # load the config
   tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]
+
+  # init a tokenizer and pretrained model
   dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(100))
   bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
   bert_tokenizer.truncation_side = "right"
   bert_tokenizer.padding_side = "right"
   bert_tokenizer.pad_token = bert_tokenizer.eos_token = "[PAD]"
   bert_model = BertModel.from_pretrained('bert-base-uncased', output_hidden_states=True)
+  # create a trainset
   trainset = BPEDataset(dataset=dataset, dim=model_config["dim"], tokenizer=bert_tokenizer, model=bert_model)
 
+  # simulate a training loop
   for feature, label in DataLoader(trainset, batch_size=32, shuffle=True, pin_memory=True, num_workers=0):
     print(f"Feature shape: {feature.shape}, Label shape: {label.shape}")
+    print(f"Feature: {feature}")
     break  # Just to check the first batch
   # for
 # if __name__ == "__main__":
