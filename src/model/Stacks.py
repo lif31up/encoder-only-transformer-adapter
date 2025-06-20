@@ -17,9 +17,9 @@ class EncoderStack(nn.Module):
   def forward(self, input):
     residual = input
     input = self.ln(self.at(input) + residual)
+    residual = input
     for i, fc in enumerate(self.ffn):
-      residual = input
-      input = self.ln(self.gelu(fc(self.dropout(input))) + residual)
+      input = self.dropout(self.gelu(fc(input)))
     return self.ln(input + residual)
   # forward()
 # EncoderStack
@@ -46,7 +46,7 @@ class DecoderStack(nn.Module):
     input = self.ln(input + residual)
     for fc in self.ffn:
       residual = input
-      input = self.ln(self.gelu(fc(self.dropout(input))) + residual)
+      input = self.ln(self.dropout(self.gelu(fc(input)) + residual))
     return self.ln(input + residual)
   # forward()
 # decoder_stack
