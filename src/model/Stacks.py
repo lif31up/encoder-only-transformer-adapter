@@ -9,6 +9,7 @@ class EncoderStack(nn.Module):
     self.at = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, init_weights=init_weights)
     self.ffn = nn.ModuleList([nn.Linear(self.dim, self.dim, bias=self.bias) for _ in range(self.n_hidn)])
     self.swish, self.ln = nn.SiLU(), nn.LayerNorm(self.dim)
+    self.dropout = nn.Dropout(0.1)
 
     if init_weights: self.ffn.apply(init_weights)
   # __init__()
@@ -16,7 +17,7 @@ class EncoderStack(nn.Module):
   def forward(self, input):
     input = self.at(input)
     residual = input
-    for fc in self.ffn: input = self.swish(fc(input))
+    for fc in self.ffn: input = self.swish(fc(self.dropout(input)))
     return self.ln(self.swish(input) + residual)
   # forward()
 # EncoderStack
@@ -29,6 +30,7 @@ class DecoderStack(nn.Module):
     self.at2 = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, mode="cross", init_weights=init_weights)
     self.ffn = nn.ModuleList([nn.Linear(self.dim, self.dim, bias=self.bias) for _ in range(self.n_hidn)])
     self.swish, self.ln = nn.SiLU(), nn.LayerNorm(self.dim)
+    self.dropout = nn.Dropout(0.1)
 
     if init_weights: self.ffn.apply(init_weights)
   # __init__()
@@ -37,7 +39,7 @@ class DecoderStack(nn.Module):
     input = self.at1(input)
     input = self.at2(input, output)
     residual = input
-    for fc in self.ffn: input = self.swish(fc(input))
+    for fc in self.ffn: input = self.swish(fc(self.dropout(input)))
     return self.ln(self.swish(input) + residual)
   # forward()
 # decoder_stack

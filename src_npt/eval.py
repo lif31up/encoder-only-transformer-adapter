@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from transformers import BertTokenizer, BertModel
+from transformers import BertTokenizer
 from src_npt.BPEDataset import BPEDataset
 from src_npt.model.BERT import BERT
 

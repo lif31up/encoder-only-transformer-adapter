@@ -16,8 +16,8 @@ CONFIG = {
     "pad_token": "[PAD]",
     "pretrained_model": "bert-base-uncased",
   }, # tokenizer_config
-  "iterations": 10,
-  "batch_size": 16,
-  "learning_rate": 0.0001,
+  "iterations": 30,
+  "batch_size": 32,
+  "learning_rate": 3e-5,
   "clip_grad": True,
 } # CONFIG
