@@ -11,7 +11,7 @@ from src.model.BERT import BERT
 def train(dataset, config=CONFIG, SAVE_TO="model"):
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-  tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]
+  tokenizer_config, model_config = config["tokenizer_config"], config["model"]
   bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
   bert_tokenizer.truncation_side = "right"
   bert_tokenizer.padding_side = "right"
