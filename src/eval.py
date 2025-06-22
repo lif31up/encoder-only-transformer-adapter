@@ -26,7 +26,7 @@ def evaluate(MODEL, dataset):
   correct = 0
   for feature, label in tqdm(DataLoader(trainset, batch_size=1, shuffle=True, pin_memory=True, num_workers=4)):
     feature, label = feature.to(device, non_blocking=True), label.to(device, non_blocking=True)
-    output = model.forward(input=feature)
+    output = model.forward(x=feature)
     output = torch.softmax(output, dim=-1)
     if torch.argmax(output, dim=-1) == torch.argmax(label, dim=-1):
       correct += 1

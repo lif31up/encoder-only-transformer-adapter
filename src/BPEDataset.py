@@ -39,7 +39,7 @@ if __name__ == "__main__":
   bert_tokenizer.truncation_side = "right"
   bert_tokenizer.padding_side = "right"
   bert_tokenizer.pad_token = bert_tokenizer.eos_token = "[PAD]"
-  bert_model = BertModel.from_pretrained('bert-base-uncased', output_hidden_states=True)
+  bert_model = BertModel.from_pretrained('bert-base-uncased', output_hidden_states=True, output_attentions=False)
   # create a trainset
   trainset = BPEDataset(dataset=dataset, dim=model_config["dim"], tokenizer=bert_tokenizer, model=bert_model)
 

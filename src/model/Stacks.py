@@ -1,73 +1,78 @@
 import torch
 from torch import nn
-import torch.nn.functional as F
 
 class EncoderStack(nn.Module):
-  def __init__(self, dim, n_hidn, num_heads, bias, init_weights=None):
+  def __init__(self, config, init_weights=None):
     super(EncoderStack, self).__init__()
-    self.dim, self.n_hidn, self.num_heads, self.bias = dim, n_hidn, num_heads, bias
-    self.at = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, init_weights=init_weights)
-    self.ffn = nn.ModuleList([nn.Linear(self.dim, self.dim, bias=self.bias) for _ in range(self.n_hidn)])
-    self.gelu, self.ln = nn.GELU(), nn.LayerNorm(self.dim)
-    self.dropout = nn.Dropout(0.1)
+    self.at = MultiHeadAttention(config, init_weights=init_weights, mode="scaled")
+    self.ffn = nn.ModuleList()
+    for _ in range(config["n_hidn"]):
+      self.ffn.append(nn.Linear(config["dim"], config["dim"], bias=config["bias"]))
+    self.activation, self.ln = nn.GELU(), nn.LayerNorm(config["dim"])
+    self.dropout = nn.Dropout(config["dropout"])
 
     if init_weights: self.ffn.apply(init_weights)
   # __init__()
 
-  def forward(self, input):
-    residual = input
-    input = self.ln(self.at(input) + residual)
-    residual = input
+  def forward(self, x):
+    res = x
+    x = self.ln(self.at(x) + res)
+    res = x
     for i, fc in enumerate(self.ffn):
-      input = self.dropout(self.gelu(fc(input)))
-    return self.ln(input + residual)
-  # forward()
+      if i != len(self.ffn): x = self.dropout(self.activation(fc(x)))
+      else: x = self.dropout(fc(x))
+    return self.ln(x + res)
+  # forward(): it forwar-pass given input through all layers to produce output.
 # EncoderStack
 
 class DecoderStack(nn.Module):
-  def __init__(self, dim, n_hidn, num_heads, bias, init_weights=None):
+  def __init__(self, config, init_weights=None):
     super(DecoderStack, self).__init__()
-    self.dim, self.n_hidn, self.num_heads, self.bias = dim, n_hidn, num_heads, bias
-    self.at1 = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, init_weights=init_weights)
-    self.at2 = MultiHeadAttention(dim=self.dim, num_heads=self.num_heads, bias=self.bias, mode="cross", init_weights=init_weights)
-    self.ffn = nn.ModuleList([nn.Linear(self.dim, self.dim, bias=self.bias) for _ in range(self.n_hidn)])
-    self.GELU, self.ln = nn.GELU(), nn.LayerNorm(self.dim)
-    self.dropout = nn.Dropout(0.1)
+    self.masked_at = MultiHeadAttention(config, init_weights=init_weights, mode="scaled")
+    self.cross_at = MultiHeadAttention(config, init_weights=init_weights, mode="cross")
+    self.ffn = nn.ModuleList()
+    for _ in range(config["n_hidn"]):
+      self.ffn.append(nn.Linear(config["dim"], config["dim"], bias=config["bias"]))
+    self.activation, self.ln = nn.GELU(), nn.LayerNorm(config["dim"])
+    self.dropout = nn.Dropout(config["output"])
 
     if init_weights: self.ffn.apply(init_weights)
   # __init__()
 
-  def forward(self, input, output):
-    residual = input
-    input = self.at1(input)
-    input = self.ln(input + residual)
-    residual = input
-    input = self.at2(input, output)
-    input = self.ln(input + residual)
-    for fc in self.ffn:
-      residual = input
-      input = self.ln(self.dropout(self.gelu(fc(input)) + residual))
-    return self.ln(input + residual)
+  def forward(self, x, y):
+    res = x
+    x = self.ln(self.masked_at(x) + res)
+    res = x
+    x = self.ln(self.cross_at(x, y) + res)
+    res = x
+    for i, fc in enumerate(self.ffn):
+      if i != len(self.ffn):
+        x = self.dropout(self.activation(fc(x)))
+      else:
+        x = self.dropout(fc(x))
+    return self.ln(x + res)
   # forward()
 # decoder_stack
 
 class MultiHeadAttention(nn.Module):
-  def __init__(self, dim: int, num_heads: int, bias: bool=True, mode="scaled", init_weights=None):
+  def __init__(self, config, mode="scaled", init_weights=None):
     super(MultiHeadAttention, self).__init__()
-    assert dim % num_heads == 0, "Dimension must be divisible by number of heads"
-    self.dim, self.num_heads, self.sqrt_d_k, self.mode = dim, num_heads, (dim // num_heads)**0.5, mode
-    self.w_q, self.w_k = nn.Linear(self.dim, self.dim, bias=bias), nn.Linear(self.dim, self.dim, bias=bias)
-    self.w_v, self.w_o = nn.Linear(self.dim, self.dim, bias=bias), nn.Linear(self.dim, self.dim, bias=bias)
+    assert config["dim"] % config["num_heads"] == 0, "Dimension must be divisible by number of heads"
+    self.sqrt_d_k, self.mode = (config["dim"] // config["num_heads"])**0.5, mode
+    self.w_q, self.w_k = nn.Linear(config["dim"], config["dim"], bias=config["bias"]), nn.Linear(config["dim"], config["dim"], bias=config["bias"])
+    self.w_v, self.w_o = nn.Linear(config["dim"], config["dim"], bias=config["bias"]), nn.Linear(config["dim"], config["dim"], bias=config["bias"])
+    self.ln, self.dropout, self.softmax = nn.LayerNorm(config["dim"]), nn.Dropout(config["attention_dropout"]), nn.Softmax(dim=-1)
 
     if init_weights: self.apply(init_weights)
   # __init__()
 
-  def forward(self, input, output=None):
-    Q = self.w_q(input)
-    (K, V) = (self.w_k(input), self.w_v(input)) if self.mode != "cross" else (self.w_k(output), self.w_v(output))
+  def forward(self, x, y=None):
+    Q = self.w_q(x)
+    (K, V) = (self.w_k(x), self.w_v(x)) if self.mode != "cross" else (self.w_k(y), self.w_v(y))
     raw_attn_scores = torch.matmul(Q, K.transpose(-2, -1))
     down_scaled_raw_attn_scores = raw_attn_scores / self.sqrt_d_k
-    attn_scores = F.softmax(down_scaled_raw_attn_scores, dim=-1)
-    return F.layer_norm(torch.matmul(attn_scores, V) + input, normalized_shape=(self.dim,))
+    attn_scores = self.softmax(down_scaled_raw_attn_scores)
+    attn_scores = self.dropout(attn_scores)
+    return self.ln(torch.matmul(attn_scores, V) + x)
   # attn_score()
 # MultiHeadAttention

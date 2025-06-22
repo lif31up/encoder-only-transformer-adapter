@@ -7,8 +7,6 @@ from transformers import BertTokenizer, BertModel
 from src.config import CONFIG
 from src.BPEDataset import BPEDataset
 from src.model.BERT import BERT
-from src.model.GPT import GPT
-
 
 def train(dataset, config=CONFIG, SAVE_TO="model"):
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -30,7 +28,7 @@ def train(dataset, config=CONFIG, SAVE_TO="model"):
   if model_config["type"] == "BERT":
     model = BERT(model_config, init_weights=init_weights).to(device)
   else:
-    model = GPT(model_config, init_weights=init_weights).to(device)
+    return 1
 
   # Initialize model, criterion, and optimizer
   criterion, optim = nn.CrossEntropyLoss(), torch.optim.Adam(model.parameters(), lr=config["learning_rate"], betas=(0.9, 0.98))
@@ -41,7 +39,7 @@ def train(dataset, config=CONFIG, SAVE_TO="model"):
   for _ in progress:
     for feature, label in DataLoader(trainset, batch_size=config["batch_size"], shuffle=True, pin_memory=True, num_workers=4):
       feature, label = feature.to(device, non_blocking=True), label.to(device, non_blocking=True)
-      output = model.forward(input=feature)
+      output = model.forward(x=feature)
       loss = criterion(output, label)
       optim.zero_grad()
       loss.backward()

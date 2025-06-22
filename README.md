@@ -15,6 +15,8 @@ This implementation includes the following architectures:
 
 > You can quickstart on [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 
+> I referenced the following resources: [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
+
 ### Instructions
 `confing.py`: This file contains the configuration settings for the model, including the number of heads, dimensions, learning rate, and other hyperparameters.
 ```python

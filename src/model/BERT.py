@@ -3,19 +3,16 @@ from transformers import BertTokenizer, BertModel
 from src.model.Stacks import EncoderStack
 
 class BERT(nn.Module):
-  def __init__(self, model_config, init_weights=None):
+  def __init__(self, config, init_weights=None):
     super(BERT, self).__init__()
-    self.num_heads, self.bias, self.n_hidn = model_config["num_heads"], model_config["bias"], model_config["n_hidn"]
-    self.dim, self.oupt_dim, self.n_stack = model_config["dim"], model_config["oupt_dim"], model_config["n_stack"]
-
-    self.stacks = nn.ModuleList([EncoderStack(dim=self.dim, n_hidn=self.n_hidn, num_heads=self.num_heads, bias=self.bias, init_weights=init_weights) for _ in range(self.n_stack)])
-    self.fc = nn.Linear(self.dim, self.oupt_dim, bias=self.bias)
-    self.softmax = nn.Softmax(dim=-1)
+    self.stacks = nn.ModuleList([EncoderStack(config, init_weights=init_weights) for _ in range(config["n_stack"])])
+    self.fc = nn.Linear(config["dim"], config["oupt_dim"], bias=config["bias"])
+    self.softmax, self.avg_pool = nn.Softmax(dim=-1), nn.AvgPool1d(1)
   # __init__():
 
-  def forward(self, input):
-    for stack in self.stacks: input = stack(input)
-    return self.fc(input.mean(dim=1))
+  def forward(self, x):
+    for stack in self.stacks: x = stack(x)
+    return self.fc(self.avg_pool(x))
   # forward()
 # BERT
 
