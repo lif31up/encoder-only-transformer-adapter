@@ -17,6 +17,8 @@ This implementation includes the following architectures:
 
 > I referenced the following resources: [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
 
+> Download the model tensors on [Hugging Face](https://huggingface.co/lif31up/attention-is-all-you-need)
+
 ### Instructions
 `confing.py`: This file contains the configuration settings for the model, including the number of heads, dimensions, learning rate, and other hyperparameters.
 ```python
