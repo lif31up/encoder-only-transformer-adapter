@@ -20,7 +20,7 @@ CONFIG = {
   }, # tokenizer_config
   "epsilon": 1e-3,
   "epochs": 5,
-  "batch_size": 2,
+  "batch_size": 16,
   "learning_rate": 1e-4,
   "clip_grad": False,
 } # CONFIG
