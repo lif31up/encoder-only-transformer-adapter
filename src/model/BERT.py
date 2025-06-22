@@ -6,7 +6,7 @@ class BERT(nn.Module):
   def __init__(self, config, init_weights=None):
     super(BERT, self).__init__()
     self.stacks = nn.ModuleList([EncoderStack(config, init_weights=init_weights) for _ in range(config["n_stack"])])
-    self.fc ,self.flatten = nn.Linear(393216, config["oupt_dim"], bias=config["bias"]), nn.Flatten(1)
+    self.fc, self.flatten = nn.Linear(393216, config["oupt_dim"], bias=config["bias"]), nn.Flatten(1)
   # __init__():
 
   def forward(self, x):

@@ -14,7 +14,7 @@ class BPEDataset(Dataset):
   def __getitem__(self, item):
     assert item < len(self.dataset), "Index out of bounds"
     feature, label = self.dataset["text"][item], self.dataset["label"][item]
-    label = F.one_hot(torch.tensor(self.num_classes.index(label)), num_classes=len(self.num_classes))
+    label = F.one_hot(torch.tensor(self.num_classes.index(label)), num_classes=len(self.num_classes)).float()
     feature = embed(feature, self.tokenizer, self.model)
     return feature, label
 # Dataset
