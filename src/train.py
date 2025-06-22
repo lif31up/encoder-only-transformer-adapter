@@ -35,7 +35,7 @@ def train(dataset, config=CONFIG, SAVE_TO="model"):
   scheduler = torch.optim.lr_scheduler.LambdaLR(optim, lr_lambda=lambda step: min((step + 1) ** -0.5, (step + 1) * 1e-3))
 
   # Training loop
-  progress = tqdm(range(config["iterations"]), desc="training", unit="epoch", leave=True, dynamic_ncols=True)
+  progress = tqdm(range(config["epochs"]), desc="training", unit="epoch", leave=True, dynamic_ncols=True)
   for _ in progress:
     for feature, label in DataLoader(trainset, batch_size=config["batch_size"], shuffle=True, pin_memory=True, num_workers=4):
       feature, label = feature.to(device, non_blocking=True), label.to(device, non_blocking=True)
