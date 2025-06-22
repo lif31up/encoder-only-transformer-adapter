@@ -23,7 +23,7 @@ if __name__ == "__main__":
   from src.BPEDataset import BPEDataset
 
   tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]
-  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(100))
+  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(10))
   bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
   bert_tokenizer.truncation_side = "right"
   bert_tokenizer.padding_side = "right"
@@ -38,7 +38,7 @@ if __name__ == "__main__":
   # init_weights()
   vurt = BERT(model_config, init_weights=None)
 
-  for feature, label in DataLoader(trainset, batch_size=32, shuffle=True, pin_memory=True, num_workers=4):
+  for feature, label in DataLoader(trainset, batch_size=2, shuffle=True, pin_memory=True, num_workers=4):
     output = vurt(feature)
     print(f"Feature shape: {feature.shape}, Label shape: {label.shape}")
     print(f"Output shape: {output.shape}")

@@ -7,7 +7,7 @@ CONFIG = {
     "dim": 768,
     "n_hidn": 2,
     "bias": False,
-    "n_stack": 3,
+    "n_stack": 1,
     "oupt_dim": 2,
     "dropout": 0.1,
     "attention_dropout": 0.1,
@@ -20,7 +20,7 @@ CONFIG = {
   }, # tokenizer_config
   "epsilon": 1e-3,
   "epochs": 5,
-  "batch_size": 16,
+  "batch_size": 2,
   "learning_rate": 1e-4,
   "clip_grad": False,
 } # CONFIG

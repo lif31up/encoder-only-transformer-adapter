@@ -14,7 +14,7 @@ class BPEDataset(Dataset):
   def __getitem__(self, item):
     assert item < len(self.dataset), "Index out of bounds"
     feature, label = self.dataset["text"][item], self.dataset["label"][item]
-    label = F.one_hot(torch.tensor(self.num_classes.index(label)), num_classes=len(self.num_classes)).float()
+    label = F.one_hot(torch.tensor(self.num_classes.index(label)), num_classes=len(self.num_classes))
     feature = embed(feature, self.tokenizer, self.model)
     return feature, label
 # Dataset
@@ -34,7 +34,7 @@ if __name__ == "__main__":
   tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]
 
   # init a tokenizer and pretrained model
-  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(100))
+  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(10))
   bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
   bert_tokenizer.truncation_side = "right"
   bert_tokenizer.padding_side = "right"
