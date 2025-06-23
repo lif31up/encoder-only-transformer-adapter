@@ -7,6 +7,14 @@ This reimplementation of BERT-like Model is based on the paper ["Attention is Al
 |----------|---------------------|
 | **imdb** | `100%` **(100/100)** |
 
+### ⭐ Transfer Learning
+In this implementation, it employes **option 1 trafer** with `bert-base-uncased`. Transfer Learning is a technique to reuse already trained model for different tasks. This is
+- In the pre-training phase, the model learns generic features from an enormous dataset.
+- After pre-training, the model undergoes Transfer/Fine-Tuning through two possible approaches:
+  - **Option 1: Retrain only the new later layers**
+  - ~~Option 2: Retrain all layers~~
+This model serve as the new later layers of the pretrained model.
+
 # Attention-is-All-You-Need
 Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
 The main goal of this implementation is to provide a clear and concise understanding of how multi-head attention works, including the key components such as query, key, value matrices, and the attention mechanism itself.
@@ -50,16 +58,6 @@ Notable BERT variants include RoBERTa (modified pre-training), DistilBERT (compr
 - Named Entity Recognition
 - Question Answering
 - Natural Language Inference
-
-### About Transfer Learning
-Transfer Learning is a technique to reuse already trained model for different tasks. This is
-
-- In the pre-training phase, the model learns generic features from an enormous dataset.
-- After pre-training, the model undergoes Transfer/Fine-Tuning through two possible approaches:
-  - **Option 1: Retrain only the new later layers**
-  - ~~Option 2: Retrain all layers~~
-
-In this implementation, they will use **option 1 trafer** with `bert-base-uncased`. The above implements serve as the new later layers of the pretrained model.
 
 ---
 ### Configuration
