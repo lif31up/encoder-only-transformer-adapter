@@ -135,7 +135,7 @@ class MultiHeadAttention(nn.Module):
 ```
 ### Encoder Stack
 The stack consists of multiple layers of multi-head attention and feed-forward networks. Each layer applies a multi-head attention mechanism followed by a feed-forward network, with residual connections and layer normalization applied at each step.
-* Since the model is BERT-like and text classification task that does not require unidirectional attention(masked attention), the `mode` is set to `"scaled"` for the multi-head attention mechanism.
+* Since the model is BERT-like and text classification task that does not require unidirectional attention(masked attention), the `mode` is set to `"scaled"` for the multi-head attention mechanism. However, masking is performed at the input layer by `BPEDataset`. This is common convention for modern BERT-like models.
 * The feed-forward network consists of multiple linear layers with GELU activation functions, allowing the model to learn complex representations of the input data.
 * Modern BERT implementations often locate the layer normalization firstly, which is different from the original paper. This implementation follows original convention.
 ```python

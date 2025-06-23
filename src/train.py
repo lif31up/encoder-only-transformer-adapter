@@ -61,6 +61,6 @@ def train(dataset, config=CONFIG, SAVE_TO="model"):
 if __name__ == "__main__":
   from datasets import load_dataset
 
-  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(1000))
+  dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(500))
   train(dataset, config=CONFIG, SAVE_TO="BERT")  # Replace with the actual model path
 # __name__
