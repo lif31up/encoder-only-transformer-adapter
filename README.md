@@ -98,7 +98,7 @@ if __name__ == "__main__":
 ## output example: accuracy: 0.91
 ```
 ---
-## Architecture
+## Technical Highlights
 The BERT-like model architecture consists of several key components, including multi-head attention, feed-forward networks, and layer normalization. The model is designed to process input sequences and extract meaningful features for various natural language processing tasks.
 
 ### Multi-Head Attention
