@@ -7,13 +7,8 @@ This reimplementation of BERT-like Model is based on the paper ["Attention is Al
 |----------|---------------------|
 | **imdb** | `100%` **(100/100)** |
 
-### ⭐ Transfer Learning
-In this implementation, it employes **option 1 transfer** (which is **LoRA, Low-Rank Adaption of LLMs**) with `bert-base-uncased`. Transfer Learning is a technique to reuse already trained model for different tasks. This is
-- In the pre-training phase, the model learns generic features from an enormous dataset.
-- After pre-training, the model undergoes Transfer/Fine-Tuning through two possible approaches:
-  - **Option 1: Retrain only the new later layers**
-  - ~~Option 2: Retrain all layers~~
-This model serve as the new later layers of the pretrained model.
+### ⭐ LoRA, Low-Rank Adaption of LLMs
+In this implementation, it employes LoRA of `bert-base-uncased`. it retrains only the new later layers—This codes serve as the new later layers of the pretrained model.
 
 # Attention-is-All-You-Need
 Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
