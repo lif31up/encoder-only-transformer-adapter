@@ -1,14 +1,14 @@
 This implementation of BERT-like Model is based on the paper ["Attention is All You Need"](https://arxiv.org/abs/1706.03762) (2017) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin.
-- **Task:** classifying movie reviews as positive or negative.
-- **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
-- **Pretrained Model:** `bert-base-uncased`, my implementation serves as late layers of pretrained model, which are used to fine-tune the model on the IMDB dataset.
-- **Quickstart on Colab:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 - **Hugging Face:** [Hugging Face](https://huggingface.co/lif31up/attention-is-all-you-need)
 - **Note & Reference:** [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-is-all-you-need), [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
 
 # Attention-is-All-You-Need
 Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
 The main goal of this implementation is to provide a clear and concise understanding of how multi-head attention works, including the key components such as query, key, value matrices, and the attention mechanism itself.
+- **Task:** classifying movie reviews as positive or negative.
+- **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
+- **Pretrained Model:** `bert-base-uncased`, my implementation serves as late layers of pretrained model, which are used to fine-tune the model on the IMDB dataset.
+- **Quickstart on Colab:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 
 ### Encoder and Decoder Stacks
 
