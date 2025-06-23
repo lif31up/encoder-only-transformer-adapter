@@ -8,7 +8,7 @@ This reimplementation of BERT-like Model is based on the paper ["Attention is Al
 | **imdb** | `100%` **(100/100)** |
 
 ### ⭐ Transfer Learning
-In this implementation, it employes **option 1 trafer** with `bert-base-uncased`. Transfer Learning is a technique to reuse already trained model for different tasks. This is
+In this implementation, it employes **option 1 trafer** (which is Low-Rank Adaption of LLMs) with `bert-base-uncased`. Transfer Learning is a technique to reuse already trained model for different tasks. This is
 - In the pre-training phase, the model learns generic features from an enormous dataset.
 - After pre-training, the model undergoes Transfer/Fine-Tuning through two possible approaches:
   - **Option 1: Retrain only the new later layers**
