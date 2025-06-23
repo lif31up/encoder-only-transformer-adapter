@@ -55,7 +55,7 @@ Transfer Learning is a technique to reuse already trained model for different ta
   - **Option 1: Retrain only the new later layers**
   - ~~Option 2: Retrain all layers~~
 
-In this validation, they will use **option 1 trafer** with `bert-base-uncased`. The above implements serve as the new later layers of the pretrained model.
+In this implementation, they will use **option 1 trafer** with `bert-base-uncased`. The above implements serve as the new later layers of the pretrained model.
 
 ---
 ### Configuration
