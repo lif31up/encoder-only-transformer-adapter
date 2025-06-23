@@ -100,10 +100,10 @@ if __name__ == "__main__":
 ## output example: accuracy: 0.91
 ```
 ---
-### Architecture
+## Architecture
 The BERT-like model architecture consists of several key components, including multi-head attention, feed-forward networks, and layer normalization. The model is designed to process input sequences and extract meaningful features for various natural language processing tasks.
 
-#### Multi-Head Attention
+### Multi-Head Attention
 The model employs a multi-head attention mechanism, which allows it to focus on different parts of the input sequence simultaneously. This is achieved by projecting the input into multiple subspaces, computing attention for each subspace, and then concatenating the results.
 
 ```python
@@ -133,7 +133,7 @@ class MultiHeadAttention(nn.Module):
   # attn_score()
 # MultiHeadAttention
 ```
-#### Encoder Stack
+### Encoder Stack
 The stack consists of multiple layers of multi-head attention and feed-forward networks. Each layer applies a multi-head attention mechanism followed by a feed-forward network, with residual connections and layer normalization applied at each step.
 * Since the model is BERT-like and text classification task that does not require unidirectional attention(masked attention), the `mode` is set to `"scaled"` for the multi-head attention mechanism.
 * The feed-forward network consists of multiple linear layers with GELU activation functions, allowing the model to learn complex representations of the input data.
@@ -163,7 +163,7 @@ class EncoderStack(nn.Module):
   # forward(): it forwar-pass given input through all layers to produce output.
 # EncoderStack
 ```
-#### Model
+### Model
 The BERT model is constructed using multiple encoder stacks. Each stack processes the input sequentially, applying multi-head attention and feed-forward networks to extract features from the input data.
 ```python
 class BERT(nn.Module):
