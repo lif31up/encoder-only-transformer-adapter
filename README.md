@@ -3,6 +3,10 @@ This reimplementation of BERT-like Model is based on the paper ["Attention is Al
 - **Note & Reference:** [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-is-all-you-need), [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
 - **Quickstart on Colab:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 
+|          | BERT(transferred)   |
+|----------|---------------------|
+| **imdb** | `100%` **(100/100)** |
+
 # Attention-is-All-You-Need
 Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
 The main goal of this implementation is to provide a clear and concise understanding of how multi-head attention works, including the key components such as query, key, value matrices, and the attention mechanism itself.
@@ -96,9 +100,82 @@ if __name__ == "__main__":
 ## output example: accuracy: 0.91
 ```
 ---
-### Result
-There are two types of results: first is the accuracy of the transferred model while second is the accuracy of the model trained from scratch.
+### Architecture
+The BERT-like model architecture consists of several key components, including multi-head attention, feed-forward networks, and layer normalization. The model is designed to process input sequences and extract meaningful features for various natural language processing tasks.
 
-|          | BERT(transferred)   |
-|----------|---------------------|
-| **imdb** | `100%` **(100/100)** |
+#### Multi-Head Attention
+The model employs a multi-head attention mechanism, which allows it to focus on different parts of the input sequence simultaneously. This is achieved by projecting the input into multiple subspaces, computing attention for each subspace, and then concatenating the results.
+
+```python
+class MultiHeadAttention(nn.Module):
+  def __init__(self, config, mode="scaled", init_weights=None):
+    super(MultiHeadAttention, self).__init__()
+    assert config["dim"] % config["num_heads"] == 0, "Dimension must be divisible by number of heads"
+    self.config = config
+    self.sqrt_d_k, self.mode = (config["dim"] // config["num_heads"])**0.5, mode
+    self.w_q, self.w_k = nn.Linear(config["dim"], config["dim"], bias=config["bias"]), nn.Linear(config["dim"], config["dim"], bias=config["bias"])
+    self.w_v, self.w_o = nn.Linear(config["dim"], config["dim"], bias=config["bias"]), nn.Linear(config["dim"], config["dim"], bias=config["bias"])
+    self.ln, self.dropout, self.softmax = nn.LayerNorm(config["dim"]), nn.Dropout(config["attention_dropout"]), nn.Softmax(dim=-1)
+
+    if init_weights: self.apply(init_weights)
+  # __init__()
+
+  def forward(self, x, y=None):
+    Q = self.w_q(x)
+    (K, V) = (self.w_k(x), self.w_v(x)) if self.mode != "cross" else (self.w_k(y), self.w_v(y))
+    raw_attn_scores = torch.matmul(Q, K.transpose(-2, -1))
+    down_scaled_raw_attn_scores = raw_attn_scores / self.sqrt_d_k
+    if self.mode == "masked":
+      "Masking is not implemented in this example, but it would typically involve setting certain positions in the attention scores to a very low value (e.g., -inf) to prevent attention to those positions."
+    attn_scores = self.softmax(down_scaled_raw_attn_scores)
+    attn_scores = self.dropout(attn_scores)
+    return self.ln(torch.matmul(attn_scores, V) + x)
+  # attn_score()
+# MultiHeadAttention
+```
+#### Encoder Stack
+The stack consists of multiple layers of multi-head attention and feed-forward networks. Each layer applies a multi-head attention mechanism followed by a feed-forward network, with residual connections and layer normalization applied at each step.
+* Since the model is BERT-like and text classification task that does not require unidirectional attention(masked attention), the `mode` is set to `"scaled"` for the multi-head attention mechanism.
+* The feed-forward network consists of multiple linear layers with GELU activation functions, allowing the model to learn complex representations of the input data.
+* Modern BERT implementations often locate the layer normalization firstly, which is different from the original paper. This implementation follows original convention.
+```python
+class EncoderStack(nn.Module):
+  def __init__(self, config, init_weights=None):
+    super(EncoderStack, self).__init__()
+    self.at = MultiHeadAttention(config, init_weights=init_weights, mode="scaled")
+    self.ffn = nn.ModuleList()
+    for _ in range(config["n_hidn"]):
+      self.ffn.append(nn.Linear(config["dim"], config["dim"], bias=config["bias"]))
+    self.activation, self.ln = nn.GELU(), nn.LayerNorm(config["dim"])
+    self.dropout = nn.Dropout(config["dropout"])
+
+    if init_weights: self.ffn.apply(init_weights)
+  # __init__()
+
+  def forward(self, x):
+    res = x
+    x = self.ln(self.at(x) + res)
+    res = x
+    for i, fc in enumerate(self.ffn):
+      if i != len(self.ffn): x = self.dropout(self.activation(fc(x)))
+      else: x = self.dropout(fc(x))
+    return self.ln(x + res)
+  # forward(): it forwar-pass given input through all layers to produce output.
+# EncoderStack
+```
+#### Model
+The BERT model is constructed using multiple encoder stacks. Each stack processes the input sequentially, applying multi-head attention and feed-forward networks to extract features from the input data.
+```python
+class BERT(nn.Module):
+  def __init__(self, config, init_weights=None):
+    super(BERT, self).__init__()
+    self.stacks = nn.ModuleList([EncoderStack(config, init_weights=init_weights) for _ in range(config["n_stack"])])
+    self.fc, self.flatten = nn.Linear(393216, config["oupt_dim"], bias=config["bias"]), nn.Flatten(1)
+  # __init__():
+
+  def forward(self, x):
+    for stack in self.stacks: x = stack(x)
+    return self.fc(self.flatten(x))
+  # forward()
+# BERT
+```
