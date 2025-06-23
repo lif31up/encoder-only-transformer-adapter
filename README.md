@@ -1,4 +1,4 @@
-This implementation of BERT-like Model is based on the paper ["Attention is All You Need"](https://arxiv.org/abs/1706.03762) (2017) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin.
+This reimplementation of BERT-like Model is based on the paper ["Attention is All You Need"](https://arxiv.org/abs/1706.03762) (2017) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin.
 - **Hugging Face:** [Hugging Face](https://huggingface.co/lif31up/attention-is-all-you-need)
 - **Note & Reference:** [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-is-all-you-need), [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
 - **Quickstart on Colab:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
