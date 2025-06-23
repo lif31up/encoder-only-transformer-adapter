@@ -9,7 +9,7 @@ This reimplementation of BERT-like Model with LoRA is based on the papers ["Atte
 | **imdb** | `100%` **(100/100)** |
 
 ### ⭐ LoRA, Low-Rank Adaption of LLMs
-This implementation employes LoRA of `bert-base-uncased`. It retrains only the newly extended layer at last to learn downstreamed tasks. This codes serve as the new later layers of the pretrained model.
+This implementation employes LoRA of `bert-base-uncased`. It retrains only the newly extended layer to learn downstreamed tasks. This codes serve as the new later layers of the pretrained model.
 
 # Attention-is-All-You-Need
 Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
