@@ -4,9 +4,9 @@ This reimplementation of BERT-like Model with LoRA is based on the papers ["Atte
 - **Note & Reference:** [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-is-all-you-need), [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
 - **Quickstart on Colab:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 
-|          | BERT(transferred)   |
-|----------|---------------------|
-| **imdb** | `100%` **(500/500)** |
+|          | **IMBD**             | SQuAD 2.0 |
+|----------|----------------------|-----------|
+| **BERT(transferred)** | `100%` **(500/500)** | (ongoing) |
 
 ## Extended BERT for Low-rank Adaption
 This implementation is a variant of LoRA for `bert-base-uncased`. A newly extended encoder is placed as an adapter/head to learn down-streamed tasks.
