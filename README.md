@@ -6,7 +6,7 @@ This reimplementation of BERT-like Model with LoRA is based on the papers ["Atte
 
 |          | BERT(transferred)   |
 |----------|---------------------|
-| **imdb** | `100%` **(100/100)** |
+| **imdb** | `100%` **(500/500)** |
 
 ### ⭐ LoRA, Low-Rank Adaption of LLMs
 This implementation employes LoRA of `bert-base-uncased`. It retrains only the newly extended layer to learn downstreamed tasks. This codes serve as the new later layers of the pretrained model.
