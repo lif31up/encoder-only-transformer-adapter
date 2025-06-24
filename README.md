@@ -8,7 +8,7 @@ This reimplementation of BERT-like Model with LoRA is based on the papers ["Atte
 |----------|---------------------|
 | **imdb** | `100%` **(500/500)** |
 
-# Low-Rank Encoder for LLMs
+# An Encoder as a Low-Rank Adapter/Head for LLMs
 This implementation is a variant of LoRA for `bert-base-uncased`. A newly extended encoder is placed as an adapter/head to learn down-streamed tasks.
 
 - **Task:** classifying movie reviews as positive or negative.
