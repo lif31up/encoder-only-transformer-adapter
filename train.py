@@ -4,9 +4,9 @@ from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import BertTokenizer, BertModel
-from src.config import CONFIG
-from src.BPEDataset import BPEDataset
-from src.model.BERT import BERT
+from config import CONFIG
+from BPEDataset import BPEDataset
+from model.BERT import BERT
 
 def train(dataset, config=CONFIG, SAVE_TO="model"):
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

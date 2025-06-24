@@ -28,7 +28,7 @@ def embed(text: str, tokenizer, model):
 if __name__ == "__main__":
   from datasets import load_dataset
   from torch.utils.data import DataLoader
-  from src.config import CONFIG
+  from config import CONFIG
 
   # load the config
   tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]

@@ -1,6 +1,6 @@
 from torch import nn
 from transformers import BertTokenizer, BertModel
-from src.model.Stacks import EncoderStack
+from model.Stacks import EncoderStack
 
 class BERT(nn.Module):
   def __init__(self, config, init_weights=None):
@@ -18,8 +18,8 @@ class BERT(nn.Module):
 if __name__ == "__main__":
   from datasets import load_dataset
   from torch.utils.data import DataLoader
-  from src.config import CONFIG
-  from src.BPEDataset import BPEDataset
+  from config import CONFIG
+  from BPEDataset import BPEDataset
 
   tokenizer_config, model_config = CONFIG["tokenizer_config"], CONFIG["model"]
   dataset = load_dataset('imdb')['train'].shuffle(seed=42).select(range(10))

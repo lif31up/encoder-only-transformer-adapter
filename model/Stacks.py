@@ -28,13 +28,13 @@ class EncoderStack(nn.Module):
 class DecoderStack(nn.Module):
   def __init__(self, config, init_weights=None):
     super(DecoderStack, self).__init__()
-    self.masked_at = MultiHeadAttention(config, init_weights=init_weights, mode="scaled")
+    self.masked_at = MultiHeadAttention(config, init_weights=init_weights, mode="masked")
     self.cross_at = MultiHeadAttention(config, init_weights=init_weights, mode="cross")
     self.ffn = nn.ModuleList()
     for _ in range(config["n_hidn"]):
       self.ffn.append(nn.Linear(config["dim"], config["dim"], bias=config["bias"]))
     self.activation, self.ln = nn.GELU(), nn.LayerNorm(config["dim"])
-    self.dropout = nn.Dropout(config["output"])
+    self.dropout = nn.Dropout(config["dropout"])
 
     if init_weights: self.ffn.apply(init_weights)
   # __init__()
@@ -58,6 +58,7 @@ class MultiHeadAttention(nn.Module):
   def __init__(self, config, mode="scaled", init_weights=None):
     super(MultiHeadAttention, self).__init__()
     assert config["dim"] % config["num_heads"] == 0, "Dimension must be divisible by number of heads"
+    self.config = config
     self.sqrt_d_k, self.mode = (config["dim"] // config["num_heads"])**0.5, mode
     self.w_q, self.w_k = nn.Linear(config["dim"], config["dim"], bias=config["bias"]), nn.Linear(config["dim"], config["dim"], bias=config["bias"])
     self.w_v, self.w_o = nn.Linear(config["dim"], config["dim"], bias=config["bias"]), nn.Linear(config["dim"], config["dim"], bias=config["bias"])
@@ -71,6 +72,9 @@ class MultiHeadAttention(nn.Module):
     (K, V) = (self.w_k(x), self.w_v(x)) if self.mode != "cross" else (self.w_k(y), self.w_v(y))
     raw_attn_scores = torch.matmul(Q, K.transpose(-2, -1))
     down_scaled_raw_attn_scores = raw_attn_scores / self.sqrt_d_k
+    if self.mode == "masked":
+      masked_indices = torch.rand(*down_scaled_raw_attn_scores.shape[:-1], 1) < self.config["mask_prob"]
+      down_scaled_raw_attn_scores[masked_indices] = float("-inf")
     attn_scores = self.softmax(down_scaled_raw_attn_scores)
     attn_scores = self.dropout(attn_scores)
     return self.ln(torch.matmul(attn_scores, V) + x)

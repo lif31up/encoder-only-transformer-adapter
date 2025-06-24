@@ -8,52 +8,17 @@ This reimplementation of BERT-like Model with LoRA is based on the papers ["Atte
 |----------|---------------------|
 | **imdb** | `100%` **(500/500)** |
 
-### ⭐ LoRA, Low-Rank Adaption of LLMs
-This implementation employes LoRA of `bert-base-uncased`. It retrains only the newly extended layer to learn downstreamed tasks. This codes serve as the new later layers of the pretrained model.
+# Low-Rank Encoder for LLMs
+This implementation is a variant of LoRA for `bert-base-uncased`. A newly extended encoder is placed as an adapter/head to learn down-streamed tasks.
 
-# Attention-is-All-You-Need
-Attention mechanisms are widely used in natural language processing tasks, particularly in transformer models.
-The main goal of this implementation is to provide a clear and concise understanding of how multi-head attention works, including the key components such as query, key, value matrices, and the attention mechanism itself.
 - **Task:** classifying movie reviews as positive or negative.
 - **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
 - **Pretrained Model:** `bert-base-uncased`, my implementation serves as late layers of pretrained model, which are used to fine-tune the model on the IMDB dataset.
 
-### Encoder and Decoder Stacks
-
-The **encoder** consists of six identical layers. Each layer contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
+### Encoder Stacks
+The **encoder** contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
 1. **Multi-Head Attention Layer:** multi-head attention mechanism → residual connection → layer normalization
 2. **Feed Forward Layer:** feed-forward network → residual connection → layer normalization
-
-The **decoder** also consists of six identical layers, but with three sublayers each. Like the encoder, it uses residual connections and layer normalization. The decoder's attention layer is unique—it combines information from two sources: its own previous outputs through a *"masked multi-head self-attention mechanism"* and the encoder's outputs via an *"encoder/decoder attention"* layer.
-1. **Masked Attention Layer:** masked self-attention → residual connection → layer normalization
-2. **Cross Attention Layer:** multi-head attention mechanism → residual connection → layer normalization
-3. **Feed Forward Layer:** feed-forward network → residual connection → layer normalization
-
-The Transformer architecture has many variants, such as BERT-like and GPT-like models. BERT-like models use only the encoder, while GPT-like models use only the decoder, replacing the encoder output with the previous layer's output when calculating the cross-attention layer.
-
-This implementation includes the following architectures:
-* **BERT-like model** which uses only the encoder part of the transformer architecture. 
-* ~~**GPT-like model** which uses only the decoder part of the transformer architecture.~~
-
-### BERT-like Models
-
-BERT (Bidirectional Encoder Representations from Transformers) and its variants represent a significant innovation in transformer architecture by utilizing only the encoder stack for bidirectional context understanding.
-
-- **Bidirectional Context:** Unlike traditional left-to-right language models, BERT processes text bidirectionally, allowing it to understand context from both directions simultaneously.
-- **Pre-training Tasks:** BERT uses two main pre-training objectives:
-    - Masked Language Modeling (MLM): Randomly masks tokens and predicts them using bidirectional context
-    - Next Sentence Prediction (NSP): Predicts whether two sentences naturally follow each other
-- **Architecture Modifications:** BERT modifies the original transformer encoder by:
-    - Removing the decoder stack entirely
-    - Adding special tokens ([CLS], [SEP]) for specific tasks
-    - Using learned positional embeddings instead of sinusoidal
-
-Notable BERT variants include RoBERTa (modified pre-training), DistilBERT (compressed version), and ALBERT (parameter-efficient architecture). These models have achieved state-of-the-art results in various natural language understanding tasks.
-
-- Text Classification
-- Named Entity Recognition
-- Question Answering
-- Natural Language Inference
 
 ---
 ### Configuration

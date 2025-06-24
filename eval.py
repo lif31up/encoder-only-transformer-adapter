@@ -2,8 +2,8 @@ import torch
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import BertTokenizer, BertModel
-from src.BPEDataset import BPEDataset
-from src.model.BERT import BERT
+from BPEDataset import BPEDataset
+from model.BERT import BERT
 
 def evaluate(MODEL, dataset):
   data = torch.load(MODEL, map_location="cpu")

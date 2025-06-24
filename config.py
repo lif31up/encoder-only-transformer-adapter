@@ -11,6 +11,7 @@ CONFIG = {
     "oupt_dim": 2,
     "dropout": 0.1,
     "attention_dropout": 0.1,
+    "mask_prob": 0.15
   },  # model_config
   "tokenizer_config": {
     "vocab_size": 30522,
