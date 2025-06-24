@@ -15,10 +15,16 @@ This implementation is a variant of LoRA for `bert-base-uncased`. A newly extend
 - **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
 - **Pretrained Model:** `bert-base-uncased`, my implementation serves as late layers of pretrained model, which are used to fine-tune the model on the IMDB dataset.
 
-### Encoder Stacks
-The **encoder** contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
+### Add an Encoder Stack as Adapter
+The **encoder** follows common BERT convention—it contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
 1. **Multi-Head Attention Layer:** multi-head attention mechanism → residual connection → layer normalization
 2. **Feed Forward Layer:** feed-forward network → residual connection → layer normalization
+
+This stack performs as an adapter or head for down-streamed tasks:
+```mermaid
+flowchart LR
+  x["Input"] --> BERT[["Pretrained BERT"]] --> EE["Extended Encoder"] --> y["Output"]
+```
 
 ---
 ### Configuration
