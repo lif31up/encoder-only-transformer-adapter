@@ -1,4 +1,4 @@
-> self-driven research practice
+> Self-driven research practice
 
 This implementation of BERT-like Model with LoRA is inspired by the papers ["Attention is All You Need"](https://arxiv.org/abs/1706.03762) (2017) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin and ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685) (2021) by Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen.
 
