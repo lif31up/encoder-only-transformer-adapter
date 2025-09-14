@@ -1,4 +1,4 @@
-This implementation of BERT-like Model with LoRA is inspired by the papers ["Attention is All You Need"](https://arxiv.org/abs/1706.03762) (2017) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin and ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685) (2021) by Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen.
+This implementation of BERT with encoder-only transformer adapter is inspired by the papers ["Attention is All You Need"](https://arxiv.org/abs/1706.03762) (2017) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin and ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/abs/2106.09685) (2021) by Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen.
 
 - **Hugging Face:** [Hugging Face](https://huggingface.co/lif31up/attention-is-all-you-need)
 - **Note & Reference:** [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-is-all-you-need), [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
@@ -9,11 +9,11 @@ This implementation of BERT-like Model with LoRA is inspired by the papers ["Att
 | **Extended BERT** | `100%` **(500/500)** | (ongoing) |
 
 ## Extended BERT for Low-rank Adaption
-This implementation is a variant of LoRA for `bert-base-uncased`. A newly extended encoder is placed as an adapter/head to learn down-streamed tasks.
+To modify from-scratch experience, I objected to codes encoder-only transoformer head for pre-trained params `bert-base-uncased`.
 
 - **Task:** classifying movie reviews as positive or negative.
 - **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
-- **Pretrained Model:** `bert-base-uncased`, my implementation serves as late layers of pretrained model, which are used to fine-tune the model on the IMDB dataset.
+- **Pretrained Model:** `bert-base-uncased`
 
 ### Add an Encoder Stack as Adapter
 The **encoder** follows common BERT convention—it contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
