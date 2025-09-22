@@ -19,6 +19,7 @@ class BERT(nn.Module):
       for stack in self.stacks: dummy = stack(dummy)
     dummy = self.flatten(dummy)
     return nn.Linear(dummy.shape[1], self.config.output_dim, bias=self.config.bias)
+  # _get_fc
 # BERT
 
 class EncoderStack(nn.Module):
