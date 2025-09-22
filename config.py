@@ -1,27 +1,45 @@
-# CONFIGURATION
-CONFIG = {
-  "version": "1.0.1",
-  "model": {
-    "type": "BERT",
-    "num_heads": 12,
-    "dim": 768,
-    "n_hidn": 2,
-    "bias": False,
-    "n_stack": 1,
-    "oupt_dim": 2,
-    "dropout": 0.1,
-    "attention_dropout": 0.1,
-    "mask_prob": 0.15
-  },  # model_config
-  "tokenizer_config": {
-    "vocab_size": 30522,
-    "special_tokens": ["[UNK]", "[PAD]", "[CLS]"],
-    "pad_token": "[PAD]",
-    "pretrained_model": "bert-base-uncased",
-  }, # tokenizer_config
-  "epsilon": 1e-3,
-  "epochs": 5,
-  "batch_size": 16,
-  "learning_rate": 1e-4,
-  "clip_grad": False,
-} # CONFIG
+from datasets import load_dataset
+from transformers import BertTokenizer, BertModel
+from EmbeddedDataset import embed
+
+
+class Config:
+  def __init__(self):
+    self.n_heads = 12
+    self.n_stacks = 1
+    self.n_hidden = 2
+    self.dim = 768
+    self.output_dim = 2
+    self.bias = True
+
+    self.dropout = 0.1
+    self.attention_dropout = 0.1
+    self.eps = 1e-3
+    self.betas = (0.9, 0.98)
+    self.epochs = 5
+    self.batch_size = 16
+    self.lr = 1e-4
+    self.clip_grad = False
+    self.mask_prob = 0.3
+
+    self.pretrained_model = "bert-base-uncased"
+    self.textset, self.testset_for_test = get_textset()
+    self.save_to = "your_path"
+    self.embedder, self.tokenizer = get_embedder(self.pretrained_model)
+    self.dummy = embed(text='hello, world', model=self.embedder, tokenizer=self.tokenizer)
+  # __init__
+# Config
+
+def get_embedder(pretrained_model):
+  tokenizer = BertTokenizer.from_pretrained(pretrained_model)
+  tokenizer.truncation_side = "right"
+  tokenizer.padding_side = "right"
+  return BertModel.from_pretrained(pretrained_model, output_hidden_states=True, output_attentions=False), tokenizer
+# get_embedder
+
+def get_textset():
+  dataset = load_dataset('imdb')['train']
+  textset = dataset.shuffle(seed=42).select(range(100))
+  textset_for_test = dataset.shuffle(seed=42).select(range(100, 201))
+  return textset, textset_for_test
+# get_textset
