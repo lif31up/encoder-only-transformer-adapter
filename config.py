@@ -25,7 +25,7 @@ class Config:
     self.pretrained_model = "bert-base-uncased"
     self.textset, self.testset_for_test = get_textset()
     self.save_to = "your_path"
-    self.embedder, self.tokenizer = get_embedder(self.pretrained_model)
+    self.embedder, self.tokenizer = get_embedder(self.pretrained_model) # you can change the tokenizer setting on `./tokenizer.json`.
     self.dummy = embed(text='hello, world', model=self.embedder, tokenizer=self.tokenizer)
   # __init__
 # Config

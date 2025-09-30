@@ -3,7 +3,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from config import Config
 from EmbeddedDataset import EmbeddedDataset
-from model.BERT import BERT
+from model.Transformer import Transformer
 
 
 def evaluate(model, testset, device):
@@ -23,7 +23,7 @@ if __name__ == "__main__":
   device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
   my_data = torch.load('your path', map_location='cpu', weights_only=False)
   my_config = my_data['config']
-  my_model = BERT(my_config)
+  my_model = Transformer(my_config)
   my_model.load_state_dict(my_data['state'])
   testset = EmbeddedDataset(dataset=my_config.testset_for_test, dim=my_config.dim, embedder=my_config.embedder, model=my_config.embedder)
   counts, n_problems = evaluate(my_model, testset, device)

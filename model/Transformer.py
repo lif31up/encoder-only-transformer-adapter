@@ -2,9 +2,9 @@ import torch
 from torch import nn
 
 
-class BERT(nn.Module):
+class Transformer(nn.Module):
   def __init__(self, config, init_weights=None):
-    super(BERT, self).__init__()
+    super(Transformer, self).__init__()
     self.stacks = nn.ModuleList([EncoderStack(config, init_weights=init_weights) for _ in range(config.n_stacks)])
     self.fc, self.flatten = self._get_fc(self.config.dummy), nn.Flatten(start_dim=1)
   # __init__

@@ -39,10 +39,10 @@ def train(model, path, config, trainset, device):
 
 if __name__ == "__main__":
   from config import Config
-  from model.BERT import BERT
+  from model.Transformer import Transformer
   device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
   bert_config = Config()
   trainset = EmbeddedDataset(dataset=bert_config.textset, dim=bert_config.dim, embedder=bert_config.embedder, model=bert_config.embedder)
-  model = BERT(bert_config)
+  model = Transformer(bert_config)
   train(model=model, path=bert_config.save_to, trainset=trainset, config=bert_config, device=device)
 # if __name__ == "__main__":
