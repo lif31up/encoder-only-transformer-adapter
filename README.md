@@ -59,7 +59,7 @@ class Config: # free to tweak the params as you want
 `train.py` is a script to train the model on the IMDB dataset. It includes the training loop, evaluation, and saving the model checkpoints.
 
 ```python
-  from config import Config
+from config import Config
 from model.Transformer import Transformer
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
