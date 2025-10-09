@@ -1,22 +1,21 @@
 This implementation of encoder-only transformer adapter is inspired by the papers ["Attention is All You Need" (2017)](https://arxiv.org/abs/1706.03762) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin and ["LoRA: Low-Rank Adaptation of Large Language Models (2021)"](https://arxiv.org/abs/2106.09685) by Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen.
 
 - **Hugging Face:** [Hugging Face](https://huggingface.co/lif31up/attention-is-all-you-need)
-- **Note & Reference:** [GitBook](https://lif31up.gitbook.io/lif31up/natural-language-process/attention-is-all-you-need), [LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch)
 - ⭐**Quickstart on Colab:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 
 |                   | **IMBD**             | **SQuAD 2.0** |
 |-------------------|----------------------|-----------|
 | **Extended BERT** | `100%` **(500/500)** | (ongoing) |
 
-## Extended BERT for Low-rank Adaption
-To modify from-scratch experience, I objected to codes encoder-only transoformer head for pre-trained params `bert-base-uncased`.
+## Encoder-only Transformer Adapter
+In this implementation, I employed **encoder-only transformer instead of MLP** (which is the most common option) as head (it's for **"coding a BERT from-scratch"** experience).
 
 - **Task:** classifying movie reviews as positive or negative.
 - **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
 - **Pretrained Model:** `bert-base-uncased`
 
 ### Objection: Add an Encoder-Only Transformer as Adapter
-The **encoder stack** in this implementation contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
+The **encoder stack** contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
 1. **Multi-Head Attention Layer:** multi-head attention mechanism → residual connection → layer normalization
 2. **Feed Forward Layer:** feed-forward network → residual connection → layer normalization
 
@@ -84,7 +83,7 @@ if __name__ == "__main__":
 ```
 ---
 ## Technical Highlights
-The model's architecture consists of several key components, including multi-head attention, feed-forward networks, and layer normalization. It is designed to process input sequences and extract meaningful features for various natural language processing tasks.
+The architecture consists of several key components, including multi-head attention, feed-forward networks, and layer normalization. It is designed to process input sequences and extract meaningful features for various natural language processing tasks.
 
 ### Multi-Head Attention
 The model employs a multi-head attention mechanism, which allows it to focus on different parts of the input sequence simultaneously. This is achieved by projecting the input into multiple subspaces, computing attention for each subspace, and then concatenating the results.
@@ -116,7 +115,7 @@ class MultiHeadAttention(nn.Module):
 ```
 
 ### Encoder Stack
-The stack consists of multiple layers of multi-head attention and feed-forward networks. Each layer applies a multi-head attention mechanism followed by a feed-forward network, with residual connections and layer normalization applied at each step.
+The stack consists of multi-head attention and feed-forward networks. Each layer applies a multi-head attention mechanism followed by a feed-forward network, with residual connections and layer normalization applied at each step.
 * Since the model is an encoder-only transformer and text classification task that does not require unidirectional attention(masked attention), the `mode` is set to `"scaled"` for the multi-head attention mechanism. However, masking is performed at the input layer by `BPEDataset`. This is common convention for modern BERT-like models.
 * The feed-forward network consists of multiple linear layers with GELU activation functions, allowing the model to learn complex representations of the input data.
 * Modern BERT implementations (aka encoder-only transformer) often locate the layer normalization firstly, which is different from the original paper. This implementation follows original convention.
