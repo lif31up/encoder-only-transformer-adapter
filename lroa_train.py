@@ -5,7 +5,7 @@ from tqdm import tqdm
 from EmbeddedDataset import EmbeddedDataset
 
 
-def train(model, path, config, trainset, device):
+def lora_train(model, path, config, trainset, device):
   model.to(device)
   criterion, optim = nn.CrossEntropyLoss(), torch.optim.Adam(model.parameters(), lr=config.lr, eps=config.eps, betas=config.betas)
   scheduler = torch.optim.lr_scheduler.LambdaLR(optim, lr_lambda=lambda step: min((step + 1) ** -0.5, (step + 1) * 1e-3))
@@ -38,5 +38,5 @@ if __name__ == "__main__":
   bert_config = Config()
   trainset = EmbeddedDataset(dataset=bert_config.textset, dim=bert_config.dim, embedder=bert_config.embedder, model=bert_config.embedder)
   model = Transformer(bert_config)
-  train(model=model, path=bert_config.save_to, trainset=trainset, config=bert_config, device=device)
+  lora_train(model=model, path=bert_config.save_to, trainset=trainset, config=bert_config, device=device)
 # if __name__ == "__main__":

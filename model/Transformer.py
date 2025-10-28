@@ -1,9 +1,10 @@
 import torch
+from holoviews.examples.reference.elements.bokeh.Div import df_html
 from torch import nn
 
 
 class Transformer(nn.Module):
-  def __init__(self, config, init_weights=None):
+  def __init__(self, config):
     super(Transformer, self).__init__()
     self.stacks = nn.ModuleList([EncoderStack(config) for _ in range(config.n_stacks)])
     self.fc, self.flatten = self._get_fc(self.config.dummy), nn.Flatten(start_dim=1)
@@ -21,6 +22,14 @@ class Transformer(nn.Module):
     return nn.Linear(dummy.shape[1], self.config.output_dim, bias=self.config.bias)
   # _get_fc
 # BERT
+
+class Distill_Transformer(Transformer):
+  def __init__(self, config):
+    super(Distill_Transformer, self).__init__(config)
+    assert self.config.distill, "self.config.distill is not True."
+    self.alpha = self.config.alpha
+  #__init__
+# Distill_Transformer
 
 class EncoderStack(nn.Module):
   def __init__(self, config):

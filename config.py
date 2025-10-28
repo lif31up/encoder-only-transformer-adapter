@@ -6,6 +6,9 @@ from EmbeddedDataset import embed
 
 class Config:
   def __init__(self):
+    self.distill = False
+    self.temperature = 4.0
+
     self.n_heads = 12
     self.n_stacks = 1
     self.n_hidden = 2
@@ -32,11 +35,11 @@ class Config:
   # __init__
 # Config
 
-def get_embedder(pretrained_model):
+def get_embedder(pretrained_model, distill=False):
   tokenizer = BertTokenizer.from_pretrained(pretrained_model)
   tokenizer.truncation_side = "right"
   tokenizer.padding_side = "right"
-  return BertModel.from_pretrained(pretrained_model, output_hidden_states=True, output_attentions=False), tokenizer
+  return BertModel.from_pretrained(pretrained_model, output_hidden_states=False if distill else True, output_attentions=False), tokenizer
 # get_embedder
 
 def get_textset():
