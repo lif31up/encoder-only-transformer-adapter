@@ -5,13 +5,13 @@ from torch import nn
 class Transformer(nn.Module):
   def __init__(self, config, init_weights=None):
     super(Transformer, self).__init__()
-    self.stacks = nn.ModuleList([EncoderStack(config, init_weights=init_weights) for _ in range(config.n_stacks)])
+    self.stacks = nn.ModuleList([EncoderStack(config) for _ in range(config.n_stacks)])
     self.fc, self.flatten = self._get_fc(self.config.dummy), nn.Flatten(start_dim=1)
   # __init__
 
   def forward(self, x):
     for stack in self.stacks: x = stack(x)
-    return self.fc(self.flatten(x))
+    return self.fc(self.flatten(x)).apply(self.config.init_weights)
   # forward
 
   def _get_fc(self, dummy):
@@ -23,16 +23,16 @@ class Transformer(nn.Module):
 # BERT
 
 class EncoderStack(nn.Module):
-  def __init__(self, config, init_weights=None):
+  def __init__(self, config):
     super(EncoderStack, self).__init__()
-    self.mt_attn = MultiHeadAttention(config, init_weights=init_weights, mode="scaled")
+    self.mt_attn = MultiHeadAttention(config, mode="scaled")
     self.ffn = nn.ModuleList()
     for _ in range(config.n_hidden):
       self.ffn.append(nn.Linear(config.dim, config.dim, bias=config.bias))
     self.activation, self.ln = nn.GELU(), nn.LayerNorm(config.dim)
     self.dropout = nn.Dropout(config.dropout)
 
-    if init_weights: self.ffn.apply(init_weights)
+    self.apply(self.config.init_weights)
   # __init__
 
   def forward(self, x):
@@ -47,7 +47,7 @@ class EncoderStack(nn.Module):
 # EncoderStack
 
 class MultiHeadAttention(nn.Module):
-  def __init__(self, config, mode="scaled", init_weights=None):
+  def __init__(self, config, mode="scaled"):
     super(MultiHeadAttention, self).__init__()
     assert config.dim % config.n_heads == 0, "Dimension must be divisible by number of heads"
     self.config = config
@@ -56,7 +56,7 @@ class MultiHeadAttention(nn.Module):
     self.w_v, self.w_o = nn.Linear(config.dim, config.dim, bias=config.bias), nn.Linear(config.dim, config.dim, bias=config.bias)
     self.ln, self.dropout, self.softmax = nn.LayerNorm(config.dim), nn.Dropout(config.attention_dropout), nn.Softmax(dim=1)
 
-    if init_weights: self.apply(init_weights)
+    self.apply(self.config.init_weights)
   # __init__
 
   def forward(self, x, y=None):

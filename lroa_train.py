@@ -5,12 +5,6 @@ from tqdm import tqdm
 from EmbeddedDataset import EmbeddedDataset
 
 
-def init_weights(m):
-  if isinstance(m, nn.Linear):
-    nn.init.xavier_uniform_(m.weight)
-    if m.bias is not None: nn.init.zeros_(m.bias)
-# init_weights
-
 def train(model, path, config, trainset, device):
   model.to(device)
   criterion, optim = nn.CrossEntropyLoss(), torch.optim.Adam(model.parameters(), lr=config.lr, eps=config.eps, betas=config.betas)

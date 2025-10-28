@@ -1,4 +1,5 @@
 from datasets import load_dataset
+from torch import nn
 from transformers import BertTokenizer, BertModel
 from EmbeddedDataset import embed
 
@@ -21,6 +22,7 @@ class Config:
     self.lr = 1e-4
     self.clip_grad = False
     self.mask_prob = 0.3
+    self.init_weights = init_weights
 
     self.pretrained_model = "bert-base-uncased"
     self.textset, self.testset_for_test = get_textset()
@@ -43,3 +45,9 @@ def get_textset():
   textset_for_test = dataset.shuffle(seed=42).select(range(100, 201))
   return textset, textset_for_test
 # get_textset
+
+def init_weights(m):
+  if isinstance(m, nn.Linear):
+    nn.init.xavier_uniform_(m.weight)
+    if m.bias is not None: nn.init.zeros_(m.bias)
+# init_weights

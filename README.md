@@ -7,23 +7,20 @@ This implementation of encoder-only transformer adapter is inspired by the paper
 |-------------------|----------------------|-----------|
 | **Extended BERT** | `100%` **(500/500)** | (ongoing) |
 
-## Encoder-only Transformer Adapter
+## Objection: Add an Encoder-Only Transformer as Adapter
+The **encoder stack** contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
+1. **Multi-Head Attention Layer:** multi-head attention mechanism → residual connection → layer normalization
+2. **Feed Forward Layer:** feed-forward network → residual connection → layer normalization
+
+### Encoder-only Transformer Adapter
 In this implementation, I employed **encoder-only transformer instead of MLP** (which is the most common option) as head (it's for **"coding a BERT from-scratch"** experience).
 
 - **Task:** classifying movie reviews as positive or negative.
 - **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
 - **Pretrained Model:** `bert-base-uncased`
 
-### Objection: Add an Encoder-Only Transformer as Adapter
-The **encoder stack** contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
-1. **Multi-Head Attention Layer:** multi-head attention mechanism → residual connection → layer normalization
-2. **Feed Forward Layer:** feed-forward network → residual connection → layer normalization
-
-This stack performs as an adapter or head for down-streamed tasks:
-```mermaid
-flowchart LR
-  x["Input"] --> BERT[["Pretrained BERT"]] --> EE["Extended Encoder/Encoder-Only Transformer"] --> y["Output"]
-```
+### ⭐ Knowledge Distillation
+With same context, we also compress the pre-trained BERT into distillBERT for the same task.
 
 ---
 ### Configuration
