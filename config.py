@@ -1,14 +1,11 @@
 from datasets import load_dataset
 from torch import nn
-from transformers import BertTokenizer, BertModel
+from transformers import BertTokenizer, BertModel, pipeline, AutoModelForSequenceClassification, AutoTokenizer
 from EmbeddedDataset import embed
 
 
 class Config:
   def __init__(self):
-    self.distill = False
-    self.temperature = 4.0
-
     self.n_heads = 12
     self.n_stacks = 1
     self.n_hidden = 2

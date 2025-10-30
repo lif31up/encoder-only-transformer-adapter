@@ -19,9 +19,6 @@ In this implementation, I employed **encoder-only transformer instead of MLP** (
 - **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
 - **Pretrained Model:** `bert-base-uncased`
 
-### ⭐ Knowledge Distillation
-With same context, we also compress the pre-trained BERT into distillBERT for the same task.
-
 ---
 ### Configuration
 `confing.py` contains the configuration settings for the model, including the number of heads, dimensions, learning rate, and other hyperparameters.

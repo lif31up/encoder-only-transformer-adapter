@@ -5,7 +5,7 @@ from tqdm import tqdm
 from EmbeddedDataset import EmbeddedDataset
 
 
-def lora_train(model, path, config, trainset, device):
+def train(model, path, config, trainset, device):
   model.to(device)
   criterion, optim = nn.CrossEntropyLoss(), torch.optim.Adam(model.parameters(), lr=config.lr, eps=config.eps, betas=config.betas)
   scheduler = torch.optim.lr_scheduler.LambdaLR(optim, lr_lambda=lambda step: min((step + 1) ** -0.5, (step + 1) * 1e-3))
