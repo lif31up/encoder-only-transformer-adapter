@@ -52,28 +52,34 @@ class Config: # free to tweak the params as you want
 `train.py` is a script to train the model on the IMDB dataset. It includes the training loop, evaluation, and saving the model checkpoints.
 
 ```python
-from config import Config
-from model.Transformer import Transformer
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-bert_config = Config()
-trainset = EmbeddedDataset(dataset=bert_config.textset, dim=bert_config.dim, embedder=bert_config.embedder,
-                           model=bert_config.embedder)
-model = Transformer(bert_config)
-train(model=model, path=bert_config.save_to, trainset=trainset, config=bert_config, device=device)
+if __name__ == "__main__":
+  from config import Config
+  from model.Transformer import Transformer
+  device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+  bert_config = Config()
+  trainset = EmbeddedDataset(
+    dataset=bert_config.textset, dim=bert_config.dim, tokenizer=bert_config.tokenizer, embedder=bert_config.embedder)
+  trainset.consolidate()
+  bert_config.dummy = trainset[0][0]
+  model = Transformer(bert_config)
+  train(model=model, path=bert_config.save_to, trainset=trainset, config=bert_config, device=device)
+# if __name__ == "__main__":
 ```
 ### Evaluation
 `eval.py` is used to evaluate the trained model on the IMDB dataset. It loads the model and tokenizer, processes the dataset, and computes the accuracy of the model.
 ```python
 if __name__ == "__main__":
   device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-  my_data = torch.load('your path', map_location='cpu', weights_only=False)
-  my_config = my_data['config']
-  my_model = Transformer(my_config)
-  my_model.load_state_dict(my_data['state'])
-  testset = EmbeddedDataset(dataset=my_config.testset_for_test, dim=my_config.dim, embedder=my_config.embedder, model=my_config.embedder)
-  counts, n_problems = evaluate(my_model, testset, device)
-  print(f"Accuracy: {counts / n_problems:.4f}")
+  bert_config = Config()
+  my_data = torch.load(
+    '/content/drive/MyDrive/Colab Notebooks/BERT.bin', map_location=torch.device('cpu'), weights_only=False)
+  my_model = Transformer(my_data['config'])
+  my_model.load_state_dict(my_data["state"])
+  testset = EmbeddedDataset(
+    dataset=bert_config.testset_for_test, dim=bert_config.dim, tokenizer=bert_config.tokenizer, embedder=bert_config.embedder)
+  testset.consolidate()
+  evaluate(model=my_model, dataset=testset, device=device)
+#if __name__ == "__main__":
 ```
 ---
 ## Technical Highlights
@@ -84,7 +90,7 @@ The model employs a multi-head attention mechanism, which allows it to focus on 
 
 ```python
 class MultiHeadAttention(nn.Module):
-  def __init__(self, config, mode="scaled", init_weights=None):
+  def __init__(self, config, mode="scaled"):
     super(MultiHeadAttention, self).__init__()
     assert config.dim % config.n_heads == 0, "Dimension must be divisible by number of heads"
     self.config = config
@@ -93,7 +99,8 @@ class MultiHeadAttention(nn.Module):
     self.w_v, self.w_o = nn.Linear(config.dim, config.dim, bias=config.bias), nn.Linear(config.dim, config.dim, bias=config.bias)
     self.ln, self.dropout, self.softmax = nn.LayerNorm(config.dim), nn.Dropout(config.attention_dropout), nn.Softmax(dim=1)
 
-    if init_weights: self.apply(init_weights)
+    self.apply(self.config.init_weights)
+  # __init__
 
   def forward(self, x, y=None):
     Q = self.w_q(x)
@@ -106,6 +113,8 @@ class MultiHeadAttention(nn.Module):
     attn_scores = self.softmax(down_scaled_raw_attn_scores)
     attn_scores = self.dropout(attn_scores)
     return self.ln(torch.matmul(attn_scores, V) + x)
+  # attn_score
+# MultiHeadAttention
 ```
 
 ### Encoder Stack
@@ -116,16 +125,18 @@ The stack consists of multi-head attention and feed-forward networks. Each layer
 
 ```python
 class EncoderStack(nn.Module):
-  def __init__(self, config, init_weights=None):
+  def __init__(self, config):
     super(EncoderStack, self).__init__()
-    self.mt_attn = MultiHeadAttention(config, init_weights=init_weights, mode="scaled")
+    self.config = config
+    self.mt_attn = MultiHeadAttention(config, mode="scaled")
     self.ffn = nn.ModuleList()
     for _ in range(config.n_hidden):
       self.ffn.append(nn.Linear(config.dim, config.dim, bias=config.bias))
     self.activation, self.ln = nn.GELU(), nn.LayerNorm(config.dim)
     self.dropout = nn.Dropout(config.dropout)
 
-    if init_weights: self.ffn.apply(init_weights)
+    self.apply(self.config.init_weights)
+  # __init__
 
   def forward(self, x):
     res = x
@@ -135,6 +146,8 @@ class EncoderStack(nn.Module):
       if i != len(self.ffn): x = self.dropout(self.activation(layer(x)))
       else: x = self.dropout(layer(x))
     return self.ln(x + res)
+  # forward
+# EncoderStack
 ```
 
 ### Model
@@ -142,18 +155,24 @@ The model is constructed using multiple encoder stacks. Each stack processes the
 
 ```python
 class Transformer(nn.Module):
-  def __init__(self, config, init_weights=None):
+  def __init__(self, config):
     super(Transformer, self).__init__()
-    self.stacks = nn.ModuleList([EncoderStack(config, init_weights=init_weights) for _ in range(config.n_stacks)])
-    self.fc, self.flatten = self._get_fc(self.config.dummy), nn.Flatten(start_dim=1)
+    self.config = config
+    self.stacks = nn.ModuleList([EncoderStack(self.config) for _ in range(config.n_stacks)])
+    self.flatten = nn.Flatten(start_dim=1)
+    self.fc = self._get_fc(self.config.dummy).apply(self.config.init_weights)
+  # __init__
 
   def forward(self, x):
     for stack in self.stacks: x = stack(x)
     return self.fc(self.flatten(x))
+  # forward
 
   def _get_fc(self, dummy):
     with torch.no_grad():
       for stack in self.stacks: dummy = stack(dummy)
-    dummy = self.flatten(dummy)
-    return nn.Linear(dummy.shape[1], self.config.output_dim, bias=self.config.bias)
+    dummy = dummy.flatten(start_dim=0)
+    return nn.Linear(dummy.shape[0], self.config.output_dim, bias=self.config.bias)
+  # _get_fc
+# Transformer
 ```

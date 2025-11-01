@@ -30,4 +30,4 @@ if __name__ == "__main__":
     dataset=bert_config.testset_for_test, dim=bert_config.dim, tokenizer=bert_config.tokenizer, embedder=bert_config.embedder)
   testset.consolidate()
   evaluate(model=my_model, dataset=testset, device=device)
-# __name__
+#if __name__ == "__main__":
