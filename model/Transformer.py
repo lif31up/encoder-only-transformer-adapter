@@ -5,34 +5,29 @@ from torch import nn
 class Transformer(nn.Module):
   def __init__(self, config):
     super(Transformer, self).__init__()
-    self.stacks = nn.ModuleList([EncoderStack(config) for _ in range(config.n_stacks)])
-    self.fc, self.flatten = self._get_fc(self.config.dummy), nn.Flatten(start_dim=1)
+    self.config = config
+    self.stacks = nn.ModuleList([EncoderStack(self.config) for _ in range(config.n_stacks)])
+    self.flatten = nn.Flatten(start_dim=1)
+    self.fc = self._get_fc(self.config.dummy).apply(self.config.init_weights)
   # __init__
 
   def forward(self, x):
     for stack in self.stacks: x = stack(x)
-    return self.fc(self.flatten(x)).apply(self.config.init_weights)
+    return self.fc(self.flatten(x))
   # forward
 
   def _get_fc(self, dummy):
     with torch.no_grad():
       for stack in self.stacks: dummy = stack(dummy)
-    dummy = self.flatten(dummy)
-    return nn.Linear(dummy.shape[1], self.config.output_dim, bias=self.config.bias)
+    dummy = dummy.flatten(start_dim=0)
+    return nn.Linear(dummy.shape[0], self.config.output_dim, bias=self.config.bias)
   # _get_fc
-# BERT
-
-class Distill_Transformer(Transformer):
-  def __init__(self, config):
-    super(Distill_Transformer, self).__init__(config)
-    assert self.config.distill, "self.config.distill is not True."
-    self.alpha = self.config.alpha
-  #__init__
-# Distill_Transformer
+# Transformer
 
 class EncoderStack(nn.Module):
   def __init__(self, config):
     super(EncoderStack, self).__init__()
+    self.config = config
     self.mt_attn = MultiHeadAttention(config, mode="scaled")
     self.ffn = nn.ModuleList()
     for _ in range(config.n_hidden):

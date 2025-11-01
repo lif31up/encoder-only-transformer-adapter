@@ -4,8 +4,8 @@ import torch.nn.functional as F
 
 
 class EmbeddedDataset(Dataset):
-  def __init__(self, dataset, embedder, model, dim):
-    self.dataset, self.tokenizer, self.model = dataset, embedder, model
+  def __init__(self, dataset, tokenizer, embedder, dim):
+    self.dataset, self.tokenizer, self.model = dataset, tokenizer, embedder
     self.num_classes, self.dim = list(set(dataset['label'])), dim
     self.x, self.y = list(), list()
     self.is_consolidated = False
@@ -15,7 +15,7 @@ class EmbeddedDataset(Dataset):
 
   def __getitem__(self, item):
     assert item < len(self.x) or item < len(self.y), "the index is out of bounds"
-    assert self.is_consolidated is False, "the dataset isn't consolidated"
+    assert self.is_consolidated, "the dataset isn't consolidated"
     return self.x[item], self.y[item]
   # __getitem__
 

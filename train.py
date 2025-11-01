@@ -36,7 +36,10 @@ if __name__ == "__main__":
   from model.Transformer import Transformer
   device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
   bert_config = Config()
-  trainset = EmbeddedDataset(dataset=bert_config.textset, dim=bert_config.dim, embedder=bert_config.embedder, model=bert_config.embedder)
+  trainset = EmbeddedDataset(
+    dataset=bert_config.textset, dim=bert_config.dim, tokenizer=bert_config.tokenizer, embedder=bert_config.embedder)
+  trainset.consolidate()
+  bert_config.dummy = trainset[0][0]
   model = Transformer(bert_config)
-  lora_train(model=model, path=bert_config.save_to, trainset=trainset, config=bert_config, device=device)
+  train(model=model, path=bert_config.save_to, trainset=trainset, config=bert_config, device=device)
 # if __name__ == "__main__":
