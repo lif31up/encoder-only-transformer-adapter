@@ -3,9 +3,9 @@ This implementation of encoder-only transformer adapter is inspired by the paper
 - **Hugging Face:** [Hugging Face](https://huggingface.co/lif31up/attention-is-all-you-need)
 - ⭐**Quickstart on Colab:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
 
-|                   | **IMBD**             | **SQuAD 2.0** |
-|-------------------|----------------------|-----------|
-| **Extended BERT** | `100%` **(500/500)** | (ongoing) |
+|                   | **IMBD**            | **SQuAD 2.0** |
+|-------------------|---------------------|-----------|
+| **Extended BERT** | `100%` **(82/100)** | (ongoing) |
 
 ## Objection: Add an Encoder-Only Transformer as Adapter
 The **encoder stack** contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
