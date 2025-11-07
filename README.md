@@ -1,19 +1,15 @@
 This implementation of encoder-only transformer adapter is inspired by the papers ["Attention is All You Need" (2017)](https://arxiv.org/abs/1706.03762) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin and ["Parameter-Efficient Transfer Learning for NLP" (2019)](https://arxiv.org/abs/1902.00751) by Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, Bruna Morrone, Quentin de Laroussilhe, Andrea Gesmundo, Mona Attariyan, Sylvain Gelly.
 
-- **Hugging Face:** [Hugging Face](https://huggingface.co/lif31up/attention-is-all-you-need)
 - ⭐**Colab Playground:** [Colab](https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing)
+
+**Results:**
 
 |                   | **IMBD**           | **SQuAD 2.0** |
 |-------------------|--------------------|-----------|
 | **Extended BERT** | `82%` **(82/100)** | (ongoing) |
 
-## Objection: Add an Encoder-Only Transformer as Adapter
-The **encoder stack** contains two sublayers: a multi-head self-attention mechanism and a simple, fully connected feed-forward network. These sublayers are connected through residual connections and layer normalization.
-1. **Multi-Head Attention Layer:** multi-head attention mechanism → residual connection → layer normalization
-2. **Feed Forward Layer:** feed-forward network → residual connection → layer normalization
-
-### Encoder-only Transformer Adapter
-In this implementation, I employed **encoder-only transformer instead of MLP** (which is the most common option) as head (it's for **"coding a BERT from-scratch"** experience).
+##  PETL Adaptor for Pretrained BERT 
+In this implementation, I used an encoder-only transformer as the head for `bert-uncased-base`—the most common approach—to gain hands-on experience coding BERT from scratch.
 
 - **Task:** classifying movie reviews as positive or negative.
 - **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
