@@ -1,5 +1,7 @@
 #  PETL Adaptor for Pretrained BERT
-This implementation of encoder-only transformer adapter is inspired by the papers ["Attention is All You Need" (2017)](https://arxiv.org/abs/1706.03762) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin and ["Parameter-Efficient Transfer Learning for NLP" (2019)](https://arxiv.org/abs/1902.00751) by Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, Bruna Morrone, Quentin de Laroussilhe, Andrea Gesmundo, Mona Attariyan, Sylvain Gelly.
+This implementation is inspired by:
+[Attention is All You Need (2017)](https://arxiv.org/abs/1706.03762) by Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz Kaiser, Illia Polosukhin.
+[Parameter-Efficient Transfer Learning for NLP (2019)](https://arxiv.org/abs/1902.00751) by Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, Bruna Morrone, Quentin de Laroussilhe, Andrea Gesmundo, Mona Attariyan, Sylvain Gelly.
 
 In this implementation, I used an encoder-only transformer as the head for `bert-uncased-base`—the most common approach—to gain hands-on experience coding BERT from scratch.
 
