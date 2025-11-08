@@ -5,8 +5,8 @@ This implementation is inspired by:
 
 In this implementation, I used an encoder-only transformer as the head for `bert-uncased-base`—the most common approach—to gain hands-on experience coding BERT from scratch.
 
-- **Task:** classifying movie reviews as positive or negative.
-- **Dataset:** `IMDB` dataset, which contains 50,000 movie reviews labeled as positive or negative.
+- **Task:** Text Classification
+- **Dataset:** IMDb Movie Reviews
 - **Pretrained Model:** `bert-base-uncased`
 
 ### Requirements
