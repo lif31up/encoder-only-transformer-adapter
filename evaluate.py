@@ -8,15 +8,18 @@ from model.Transformer import Transformer
 
 def evaluate(model, dataset, device):
   model.to(device)
-  correct = 0
+  correct, n_total = 0, 0
   for feature, label in tqdm(DataLoader(dataset, batch_size=1, shuffle=True, pin_memory=True, num_workers=4)):
     feature, label = feature.to(device, non_blocking=True), label.to(device, non_blocking=True)
     output = model.forward(feature)
     output = torch.softmax(output, dim=-1)
-    if torch.argmax(output, dim=-1) == torch.argmax(label, dim=-1):
-      correct += 1
+    pred = torch.argmax(output, dim=-1)
+    label = torch.argmax(label, dim=-1)
+    for p, l in zip(pred, label):
+      if p == l: correct += 1
+      n_total += 1
   # for
-  print(f"Accuracy: {correct / len(dataset):.4f}")
+  print(f"Accuracy: {correct / n_total:.4f}")
 # eval
 
 if __name__ == "__main__":
