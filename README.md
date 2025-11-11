@@ -9,6 +9,11 @@ In this implementation, I used an encoder-only transformer as the head for `bert
 - **Dataset:** IMDb Movie Reviews
 - **Pretrained Model:** `bert-base-uncased`
 
+### Experiment on CoLab
+<a href="https://colab.research.google.com/drive/1oEwK7Tz-XvABJQ9-ypHznY24vD_uq4h_?usp=sharing">
+  <img alt="colab" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Google_Colaboratory_SVG_Logo.svg/2560px-Google_Colaboratory_SVG_Logo.svg.png" width="160"></img>
+</a>
+
 ### Requirements
 To run the code on your own machine, `run pip install -r requirements.txt`.
 ```text
